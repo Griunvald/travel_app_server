@@ -1,0 +1,31 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Travel app",
+  "main": "index.js",
+  "type":"module",
+  "scripts": {
+    "server": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Griunvald/travel_app.git"
+  },
+  "keywords": [
+    "postgresql",
+    "postgres",
+    "pg",
+    "node",
+    "react",
+    "javascript"
+  ],
+  "author": "Vitali Griunvald",
+  "license": "CC-BY-NC-ND-4.0",
+  "bugs": {
+    "url": "https://github.com/Griunvald/travel_app/issues"
+  },
+  "homepage": "https://github.com/Griunvald/travel_app#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
