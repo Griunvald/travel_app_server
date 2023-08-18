@@ -8,8 +8,7 @@ class AuthController {
     async register(req, res) {
         const { email, fullname, username, password } = req.body;
         try {
-        const newUser = await this.authRepository.createUser(email, fullname, username, password);
-        const token = newUser.token;
+        const token = await this.authRepository.createUser(email, fullname, username, password);
         res.cookie('access_token', token, {httpOnly: true});
         res.status(201).json({ message: 'User was created!' });
         } catch (err) {
