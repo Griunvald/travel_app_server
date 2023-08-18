@@ -17,6 +17,19 @@ class AuthController {
             res.status(500).json({ error: 'Internal server error' });
         }
     }
+     
+async login(req, res) {
+       const {input, password} = req.body;
+       try {
+           const token = await this.authRepository.login(input, password)
+           res.cookie('access_token', token, {httpOnly: true});
+           res.status(200).json({ message: 'Cookie set!' });
+       }catch(err){
+           console.error(err);
+           res.status(500).json({ error: 'Internal server error' });
+       } 
+    }
+    
 }
 
 export default AuthController;

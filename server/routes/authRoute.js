@@ -7,7 +7,7 @@ const authController = new AuthController(AuthRepository);
 
 router
     .post('/register', authController.register.bind(authController))
-    .post('/login')
+    .post('/login', authController.login.bind(authController))
     .post('/logout');
 
 export default router;

@@ -13,12 +13,15 @@ class AuthRepository {
         return bcrypt.hash(password, saltRounds);
     }
 
-    async generateToken(payload, secretKey, expiresIn) {
+    async generateToken(id) {
         return new Promise((resolve, reject) => {
-            jwt.sign({payload}, secretKey, {expiresIn}, (err, token) => {
+            const secretKey = process.env.JWT_SECRET_KEY;
+            const expiresIn = process.env.JWT_EXPIRES_IN;
+            jwt.sign({id}, secretKey, {expiresIn}, (err, token) => {
                 if(err) {
                     reject(err);
                 } else {
+                    console.log('Token signed!');
                     resolve(token);
                 }
             });
@@ -56,7 +59,6 @@ class AuthRepository {
             const secretKey = process.env.JWT_SECRET_KEY;
             const expiresIn = process.env.JWT_EXPIRES_IN; 
             const token = await this.generateToken(userId, secretKey, expiresIn);
-            console.log(token);
 
             return token;
             
@@ -66,6 +68,62 @@ class AuthRepository {
             throw err;
         } finally {
             client.release();
+        }
+    }
+
+    async findUserByEmail(email) {
+        const client = await this.pool.connect();
+        try {
+            const searchQuery = `SELECT * FROM users WHERE email = $1 `;
+            const user = await client.query(searchQuery, [email] );
+            return user;
+        } catch(err) {
+            console.error(err);
+            throw err;
+        } finally {
+            client.release();
+        }
+    }
+
+
+    async findUserByUsername(username) {
+        const client = await this.pool.connect();
+        try {
+        const searchQuery = `SELECT user_id FROM usernames WHERE username = $1`;
+            const user = await client.query(searchQuery, [username] );
+            return user;
+        } catch(err) {
+            console.error(err);
+            throw err;
+        } finally {
+            client.release();
+        }
+    }
+
+
+    async verifyPassword(user, password) {
+        const hashedPassword = user.rows[0].password;
+        const match = await bcrypt.compare(password, hashedPassword)
+        return match;
+    }
+
+    async login(input, password) {
+        try {
+            let user;
+            if(input.includes('@')) {
+                user = await this.findUserByEmail(input);
+            } else {
+                user = await this.findUserByUsername(input);
+            }
+            if(user && await this.verifyPassword(user, password)) {
+                const token = await this.generateToken(user.rows[0].id);
+                console.log(token);
+                return token;
+             } else {
+                 return null;
+             }
+        } catch(err){
+            throw err;
         }
     }
 };

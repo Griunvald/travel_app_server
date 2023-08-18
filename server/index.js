@@ -6,7 +6,7 @@ import authRouter from './routes/authRoute.js';
 const app = express();
 
 app.use(express.json());
-app.use(coockieParser());
+app.use(cookieParser());
 app.use('/api/v1/auth', authRouter);
 
 app.listen(3003, () => {
