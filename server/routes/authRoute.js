@@ -8,6 +8,6 @@ const authController = new AuthController(AuthRepository);
 router
     .post('/register', authController.register.bind(authController))
     .post('/login', authController.login.bind(authController))
-    .post('/logout');
+    .post('/logout', authController.logout.bind(authController))
 
 export default router;

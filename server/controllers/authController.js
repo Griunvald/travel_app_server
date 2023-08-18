@@ -29,6 +29,16 @@ async login(req, res) {
            res.status(500).json({ error: 'Internal server error' });
        } 
     }
+
+    logout(req, res){
+        try{
+           res.cookie('access_token', '', {httpOnly: true, expires: new Date(0)});
+           res.status(200).json({ message: 'Logout successfully!' });
+        }catch(err){
+           console.error(err);
+           res.status(500).json({ error: 'Internal server error' });
+        }
+    }
     
 }
 
