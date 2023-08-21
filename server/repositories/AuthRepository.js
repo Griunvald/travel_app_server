@@ -88,10 +88,16 @@ class AuthRepository {
 
     async findUserByUsername(username) {
         const client = await this.pool.connect();
+
         try {
-        const searchQuery = `SELECT user_id FROM usernames WHERE username = $1`;
-            const user = await client.query(searchQuery, [username] );
-            return user;
+            const searchQuery = `SELECT * FROM usernames WHERE username = $1`;
+            let foundUsername = await client.query(searchQuery, [username] );
+            if(foundUsername.rows[0].username === username) {
+                const getUserQuery = `SELECT * FROM users WHERE id = $1`;
+                const userId = foundUsername.rows[0].user_id; 
+                const user = await client.query(getUserQuery, [userId] );
+                return user;
+            }
         } catch(err) {
             console.error(err);
             throw err;
