@@ -26,6 +26,7 @@ async login(req, res, next) {
        const {input, password} = req.body;
        try {
            const token = await this.authRepository.login(input, password)
+           if(!token) return res.status(401).json({message: 'Account not found!'});
            res.cookie('access_token', token, {httpOnly: true});
            res.status(200).json({ message: 'Cookie set!' });
        }catch(err){

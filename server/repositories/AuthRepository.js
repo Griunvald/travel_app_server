@@ -102,6 +102,9 @@ class AuthRepository {
 
 
     async verifyPassword(user, password) {
+        if (!user || !user.rows || user.rows.length === 0) {
+            return false;
+        }
         const hashedPassword = user.rows[0].password;
         const match = await bcrypt.compare(password, hashedPassword)
         return match;
