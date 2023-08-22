@@ -14,7 +14,10 @@ class TripController {
         } catch(err){
             if(err.message.includes('duplicate key value violates unique constraint')){
                next(new AppError('Trip title aready exists for this user', 400));
-            } else {
+            } else if (err.message.includes('value too long for type character varying(100)')){
+               next(new AppError('Trip title too long', 400));
+            }
+            else {
                console.error(err);
                next(new AppError('Internal server error', 500));
             }
