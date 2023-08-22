@@ -12,8 +12,12 @@ class TripController {
            const trip = await this.tripRepository.createTrip(userId, title);
            res.status(201).json({message: 'Trip was created!'})
         } catch(err){
-           console.error(err);
-           next(new AppError('Internal server error', 500));
+            if(err.message.includes('duplicate key value violates unique constraint')){
+               next(new AppError('Trip title aready exists for this user', 400));
+            } else {
+               console.error(err);
+               next(new AppError('Internal server error', 500));
+            }
         }
     }
 }
