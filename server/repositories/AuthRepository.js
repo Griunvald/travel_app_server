@@ -42,11 +42,11 @@ class AuthRepository {
 
             const hashedPassword = await this.hashPassword(password);
 
-            const userInsertQuery = `INSERT INTO users (email, fullname, password)
-            VALUES ($1, $2, $3)
+            const userInsertQuery = `INSERT INTO users (email, fullname, password, username)
+            VALUES ($1, $2, $3, $4)
             RETURNING id, email`;
             
-            const values = [email, fullname, hashedPassword];
+            const values = [email, fullname, hashedPassword, username];
 
             const userInsertResult = await  this.pool.query(userInsertQuery, values);
             const userId = userInsertResult.rows[0].id;
@@ -71,11 +71,11 @@ class AuthRepository {
         }
     }
 
-    async findUserByEmail(email) {
+    async findUserByEmailOrUsername(input, string) {
         const client = await this.pool.connect();
         try {
-            const searchQuery = `SELECT * FROM users WHERE email = $1 `;
-            const user = await client.query(searchQuery, [email] );
+            const searchQuery = `SELECT * FROM users WHERE ${string} = $1 `;
+            const user = await client.query(searchQuery, [input] );
             return user;
         } catch(err) {
             console.error(err);
@@ -83,29 +83,7 @@ class AuthRepository {
         } finally {
             client.release();
         }
-    }
-
-
-    async findUserByUsername(username) {
-        const client = await this.pool.connect();
-
-        try {
-            const searchQuery = `SELECT * FROM usernames WHERE username = $1`;
-            let foundUsername = await client.query(searchQuery, [username] );
-            if(foundUsername.rows[0].username === username) {
-                const getUserQuery = `SELECT * FROM users WHERE id = $1`;
-                const userId = foundUsername.rows[0].user_id; 
-                const user = await client.query(getUserQuery, [userId] );
-                return user;
-            }
-        } catch(err) {
-            console.error(err);
-            throw err;
-        } finally {
-            client.release();
-        }
-    }
-
+    } 
 
     async verifyPassword(user, password) {
         if (!user || !user.rows || user.rows.length === 0) {
@@ -120,9 +98,9 @@ class AuthRepository {
         try {
             let user;
             if(input.includes('@')) {
-                user = await this.findUserByEmail(input);
+                user = await this.findUserByEmailOrUsername(input, 'email');
             } else {
-                user = await this.findUserByUsername(input);
+                user = await this.findUserByEmailOrUsername(input, 'username');
             }
             if(user && await this.verifyPassword(user, password)) {
                 const token = await this.generateToken(user.rows[0].id);
