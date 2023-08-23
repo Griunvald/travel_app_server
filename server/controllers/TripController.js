@@ -1,5 +1,4 @@
 import AppError from '../middleware/error/AppError.js';
-import TripRepository from '../repositories/TripRepository.js';
 
 class TripController {
     constructor(TripRepository){
