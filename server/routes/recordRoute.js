@@ -6,4 +6,5 @@ const router = Router();
 const recordController = new RecordController(RecordRepository);
 
 router.post('/create-record', recordController.createRecord.bind(recordController));
+
 export default router;

@@ -1,4 +1,4 @@
-import AuthRepository from '../repositories/AuthRepository.js';
+// import AuthRepository from '../repositories/AuthRepository.js';
 import AppError from '../middleware/error/AppError.js';
 
 class AuthController {

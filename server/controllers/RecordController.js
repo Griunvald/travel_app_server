@@ -5,12 +5,14 @@ class RecordController {
         this.recordRepository = RecordRepository;
     }    
 
-    createRecord(req, res, next){
+    async createRecord(req, res, next){
+        const {userId, tripId, type } = req.body;
         try{
+            const record = await this.recordRepository.createRecord(userId, tripId, type);
            res.status(201).json({ message: 'Record created!'});
         } catch(err) {
             console.error(err);
-            next(AppError('Internal server error'));
+            next(new AppError('Internal server error'));
         }
     }
 
