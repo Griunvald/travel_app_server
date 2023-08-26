@@ -18,6 +18,9 @@ class RecordRepository {
                 if(type === 'text'){
                     const insertTextQuery =`INSERT INTO text_records (id, text_value) VALUES ($1, $2)`;
                    client.query(insertTextQuery, [orderNumber, data]);
+                } else if (type === 'url'){
+                    const insertUrlQuery =`INSERT INTO url_records (id, url_value) VALUES ($1, $2)`;
+                   client.query(insertUrlQuery, [orderNumber, data]);
                 }
             } catch(err){
                 console.error(err);
