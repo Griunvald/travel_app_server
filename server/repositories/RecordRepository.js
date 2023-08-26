@@ -5,7 +5,7 @@ class RecordRepository {
         this.pool = dbPool;
     }
     
-    async createRecord(userId, tripId, type){
+    async createRecord(userId, tripId, type, data){
         const client = await this.pool.connect();
            try{
                 const searchQuery = `SELECT COALESCE(MAX(order_number), 0) AS max_number
@@ -15,7 +15,10 @@ class RecordRepository {
                 const selectResult = await client.query(searchQuery, [tripId]);
                 const orderNumber = selectResult.rows[0].max_number + 1;
                 const insertResult = await client.query(insertQuery, [userId, tripId, type, orderNumber]);
-               console.log(insertResult.rows[0]);
+                if(type === 'text'){
+                    const insertTextQuery =`INSERT INTO text_records (id, text_value) VALUES ($1, $2)`;
+                   client.query(insertTextQuery, [orderNumber, data]);
+                }
             } catch(err){
                 console.error(err);
                 throw err;

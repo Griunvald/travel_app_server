@@ -6,9 +6,9 @@ class RecordController {
     }    
 
     async createRecord(req, res, next){
-        const {userId, tripId, type } = req.body;
+        const {userId, tripId, type, data } = req.body;
         try{
-            const record = await this.recordRepository.createRecord(userId, tripId, type);
+            const record = await this.recordRepository.createRecord(userId, tripId, type, data);
            res.status(201).json({ message: 'Record created!'});
         } catch(err) {
             console.error(err);
