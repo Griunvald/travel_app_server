@@ -11,7 +11,7 @@ class RecordRepository {
                 const searchQuery = `SELECT COALESCE(MAX(order_number), 0) AS max_number
                 FROM records WHERE trip_id = $1`;
                 const insertQuery = `INSERT INTO records (user_id, trip_id, type, order_number)
-                VALUES ($1, $2, $3, $4)`;
+                VALUES ($1, $2, $3, $4) RETURNING id`;
                 const selectResult = await client.query(searchQuery, [tripId]);
                 const orderNumber = selectResult.rows[0].max_number + 1;
                 const insertResult = await client.query(insertQuery, [userId, tripId, type, orderNumber]);
@@ -22,7 +22,24 @@ class RecordRepository {
                     const insertUrlQuery =`INSERT INTO url_records (id, url_value) VALUES ($1, $2)`;
                    client.query(insertUrlQuery, [orderNumber, data]);
                 }
+               const recordId = insertResult.rows[0].id;
+               console.log("Record id is: ", recordId);
+               return recordId;
             } catch(err){
+                console.error(err);
+                throw err;
+            } finally {
+                client.release();
+            }
+    }
+    
+    async associateTagsWithRecord(recordId, tagIds){
+        const client = await this.pool.connect();
+        try{
+            const insertQuery = `INSERT INTO record_tags(record_id, tag_id) 
+            VALUES ($1, unnest($2::integer[]))`;
+            await client.query(insertQuery, [recordId, tagIds]);
+           } catch(err){
                 console.error(err);
                 throw err;
             } finally {

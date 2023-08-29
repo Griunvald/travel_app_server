@@ -9,10 +9,12 @@ class RecordController {
     async createRecord(req, res, next){
         const {userId, tripId, type, data, tags } = req.body;
         console.log(tags);
+        let recordId;
         try{
-            const record = await this.recordRepository.createRecord(userId, tripId, type, data);
+            const recordId = await this.recordRepository.createRecord(userId, tripId, type, data);
             if(tags && tags.length > 0){
-                await this.tagService.createTagsAndReturnIds(tags);
+                const tagIds = await this.tagService.createTagsAndReturnIds(tags);
+                await this.recordRepository.associateTagsWithRecord(recordId, tagIds);
             }
            res.status(201).json({ message: 'Record created!'});
         } catch(err) {
