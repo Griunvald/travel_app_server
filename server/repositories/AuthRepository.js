@@ -113,6 +113,17 @@ class AuthRepository {
             throw err;
         }
     }
+
+    async getUserIdFromToken(token){
+
+        const decodedToken = await jwt.verify(token, process.env.JWT_SECRET_KEY)
+        const userId = decodedToken.userId;
+        console.log(userId);
+        return userId;
+        
+    }
+
+    
 };
 
 export default new AuthRepository(dbPool);
