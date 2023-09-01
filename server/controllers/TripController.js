@@ -10,7 +10,8 @@ class TripController {
         try {
            const trip = await this.tripRepository.createTrip(userId, title);
             if(trip === 'open') return res.status(400).json({message: 'Please, close your previous trip!'})
-           res.status(201).json({message: 'Trip was created!'})
+            res.cookie('trip_info', trip, {httpOnly: true});
+            res.status(201).json({message: 'Trip was created!'})
         } catch(err){
             if (title.trim().length === 0) {
                next(new AppError('Please provide a trip title', 400));

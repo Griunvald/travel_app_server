@@ -1,4 +1,5 @@
 import dbPool from '../db.js';
+import { signJwt } from '../utils/jwtUtils.js';
 
 class TripRepository {
     constructor(dbPool){
@@ -9,8 +10,10 @@ class TripRepository {
         console.log(tripStatus);
         if (tripStatus === 'open') return 'open';
         const client = await this.pool.connect();
-        const insertQuery = `INSERT INTO trips (user_id, title) VALUES ($1, $2)`;
+        const insertQuery = `INSERT INTO trips (user_id, title) VALUES ($1, $2) RETURNING id`;
         const trip = await client.query(insertQuery, [userId, title]);
+        const token = await signJwt(trip.rows[0].id);
+        return token;
     }
 
     async checkCurrentTripStatus(userId){
