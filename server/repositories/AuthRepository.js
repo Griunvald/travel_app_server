@@ -1,6 +1,6 @@
 import dbPool from '../db.js';
 import bcrypt from 'bcrypt';
-import jAutRwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { signJwt } from '../utils/jwtUtils.js';
 import cookieParser from 'cookie-parser';
 
