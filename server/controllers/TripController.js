@@ -24,6 +24,22 @@ class TripController {
             }
         }
     }
+    async endCurrentTrip(req, res, next){
+        const {userId} = req.body;
+        try {
+            const status = await this.tripRepository.endCurrentTrip(userId);
+            console.log("Trip status is: ", status);
+            if(status === 'closed'){
+               return res.status(200).json({message: 'Trip already closed!'})
+            } else {
+               res.status(200).json({message: 'Trip was closed!'})
+            }
+        } catch (err){
+           console.error(err);
+           next(new AppError('Internal server error', 500));
+        }
+
+    }
 }
 
 export default TripController;

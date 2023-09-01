@@ -16,9 +16,11 @@ class TripRepository {
     async checkCurrentTripStatus(userId){
         const client = await this.pool.connect();
         try{
-            const searchQuery = `SELECT status FROM trips WHERE user_id = $1`;
+            const searchQuery = `SELECT status FROM trips WHERE user_id = $1 
+            ORDER BY created_at DESC`;
             const searchResult = await client.query(searchQuery, [userId]);
-            return searchResult.rows[0].status;
+            const tripStatus =  searchResult.rows[0].status;
+            return tripStatus;
             } catch(err){
                 console.error(err);
                 throw err;
@@ -26,6 +28,25 @@ class TripRepository {
                 client.release();
             }
 
+    }
+    
+    async endCurrentTrip(userId){
+        const client = await this.pool.connect();
+        const tripStatus = await this.checkCurrentTripStatus(userId);
+            try{
+                if(tripStatus === 'open'){
+                    const updateQuery = `UPDATE trips SET status = 'closed' 
+                    WHERE user_id = $1 AND status = 'open'`;
+                    const updateResult = await client.query(updateQuery, [userId]);
+                } else if(tripStatus === 'closed'){
+                    return 'closed';
+                }
+            } catch(err){
+                console.error(err);
+                throw err;
+            } finally {
+                client.release();
+            }
     }
 }
 
