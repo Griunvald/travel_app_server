@@ -1,6 +1,7 @@
 import dbPool from '../db.js';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import jAutRwt from 'jsonwebtoken';
+import { signJwt } from '../utils/jwtUtils.js';
 import cookieParser from 'cookie-parser';
 
 class AuthRepository {
@@ -14,18 +15,8 @@ class AuthRepository {
     }
 
     async generateToken(id) {
-        return new Promise((resolve, reject) => {
-            const secretKey = process.env.JWT_SECRET_KEY;
-            const expiresIn = process.env.JWT_EXPIRES_IN;
-            jwt.sign({id}, secretKey, {expiresIn}, (err, token) => {
-                if(err) {
-                    reject(err);
-                } else {
-                    console.log('Token signed!');
-                    resolve(token);
-                }
-            });
-        })
+        const token = await signJwt({id});
+        return token;
     }
 
     async createUser(email, fullname, username, password) {
@@ -56,9 +47,7 @@ class AuthRepository {
 
             await client.query('COMMIT')
 
-            const secretKey = process.env.JWT_SECRET_KEY;
-            const expiresIn = process.env.JWT_EXPIRES_IN; 
-            const token = await this.generateToken(userId, secretKey, expiresIn);
+            const token = await this.generateToken(userId);
 
             return token;
             
@@ -104,7 +93,6 @@ class AuthRepository {
             }
             if(user && await this.verifyPassword(user, password)) {
                 const token = await this.generateToken(user.rows[0].id);
-                console.log(token);
                 return token;
              } else {
                  return null;
@@ -115,7 +103,6 @@ class AuthRepository {
     }
 
     async getUserIdFromToken(token){
-
         const decodedToken = await jwt.verify(token, process.env.JWT_SECRET_KEY)
         const userId = decodedToken.userId;
         console.log(userId);

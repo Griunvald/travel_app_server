@@ -1,0 +1,17 @@
+import jwt from 'jsonwebtoken';
+
+export const signJwt = async (...args) => {
+    const secretKey = process.env.JWT_SECRET_KEY;
+    const expiresIn = process.env.JWT_EXPIRES_IN;
+
+    const payload = Object.assign({}, ...args);
+
+    try {
+        const token = await jwt.sign(payload, secretKey, { expiresIn });
+        console.log(token);
+        return token;
+    } catch (err){
+       throw err;
+    }
+}
+
