@@ -76,26 +76,28 @@ class TripRepository {
         const client = await this.pool.connect();
         try{
             const { id: tripId } = await this.getCurrentTrip(userId);
-            console.log("tripId is: ", tripId);
-            console.log("userId is: ", userId);
             const selectQuery = `
-                WITH RecordTags AS (
-                SELECT rt.record_id, ARRAY_AGG(t.tag_name) AS record_tags
-                FROM record_tags rt
-                JOIN tags t ON rt.tag_id = t.id
-                GROUP BY rt.record_id
+              WITH RecordTags AS (
+              SELECT rt.record_id, t.tag_name
+              FROM record_tags rt
+              JOIN tags t ON rt.tag_id = t.id
             )
 
-                SELECT r.*, tr.text_value, ur.url_value, trr.record_tags AS
-                text_record_tags, urr.record_tags AS url_record_tags
-                FROM records r
-                LEFT JOIN text_records tr ON r.id = tr.id
-                LEFT JOIN url_records ur ON r.id = ur.id
-                LEFT JOIN RecordTags trr ON r.id = trr.record_id
-                LEFT JOIN RecordTags urr ON r.id = urr.record_id
-                WHERE r.user_id = $1 AND r.trip_id = $2
-                ORDER BY r.order_number ASC;
-        `;
+            SELECT
+              r.*,
+              tr.text_value,
+              ur.url_value,
+              (
+                SELECT ARRAY_AGG(rt.tag_name)
+                FROM RecordTags rt
+                WHERE rt.record_id = r.id
+              ) AS record_tags
+            FROM records r
+            LEFT JOIN text_records tr ON r.id = tr.id AND r.type = 'text'
+            LEFT JOIN url_records ur ON r.id = ur.id AND r.type = 'url'
+            WHERE r.user_id = $1 AND r.trip_id = $2
+            ORDER BY r.order_number ASC;
+            `
             const result = await client.query(selectQuery, [userId, tripId]);
             return result;
         } catch(err){
