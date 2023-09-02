@@ -15,3 +15,7 @@ export const signJwt = async (...args) => {
     }
 }
 
+export const verifyJwt = async (token) => {
+    const decodedToken = await jwt.verify(token, process.env.JWT_SECRET_KEY)
+    return decodedToken;
+}

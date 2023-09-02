@@ -1,7 +1,6 @@
 import dbPool from '../db.js';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import { signJwt } from '../utils/jwtUtils.js';
+import { signJwt, verifyJwt } from '../utils/jwtUtils.js';
 import cookieParser from 'cookie-parser';
 
 class AuthRepository {
@@ -103,7 +102,7 @@ class AuthRepository {
     }
 
     async getUserIdFromToken(token){
-        const decodedToken = await jwt.verify(token, process.env.JWT_SECRET_KEY)
+        const decodedToken = await verifyJwt(token);
         const userId = decodedToken.userId;
         console.log(userId);
         return userId;
