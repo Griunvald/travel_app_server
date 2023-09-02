@@ -51,6 +51,22 @@ class TripRepository {
                 client.release();
             }
     }
+
+    async getCurrentTrip(userId){
+        const client = await this.pool.connect();
+        try{
+            const searchQuery = `SELECT title, created_at FROM trips WHERE user_id = $1 
+            ORDER BY created_at DESC LIMIT 1`;
+            const searchResult = await client.query(searchQuery, [userId]);
+            const { title, created_at: createdAt } =  searchResult.rows[0];
+            return { title, createdAt };
+        } catch(err){
+            console.error(err);
+            throw err;
+        } finally {
+            client.release();
+        }
+    }
 }
 
 export default new TripRepository(dbPool);
