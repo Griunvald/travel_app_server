@@ -35,6 +35,19 @@ class RecordController {
 
     }
 
+
+    async deleteTextRecord(req, res, next){
+        const { textRecordId } = req.body;
+        try{
+            await this.recordRepository.deleteTextRecord(textRecordId);
+           res.status(201).json({ message: 'Record was successfully deleted!'});
+        } catch(err) {
+            console.error(err);
+            next(new AppError('Internal server error'));
+        }
+
+    }
+
 }
 
 export default RecordController;

@@ -9,5 +9,6 @@ const recordController = new RecordController(RecordRepository, TagService);
 
 router.post('/create-record', authGuard, recordController.createRecord.bind(recordController))
 router.patch('/edit-text-record', authGuard, recordController.editTextRecord.bind(recordController))
+router.delete('/delete-text-record', authGuard, recordController.deleteTextRecord.bind(recordController))
 
 export default router;
