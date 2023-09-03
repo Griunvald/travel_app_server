@@ -23,6 +23,18 @@ class RecordController {
         }
     }
 
+    async editTextRecord(req, res, next){
+        const { textRecordId, textValue } = req.body;
+        try{
+            await this.recordRepository.editTextRecord(textRecordId, textValue);
+           res.status(201).json({ message: 'Record was successfully edited!'});
+        } catch(err) {
+            console.error(err);
+            next(new AppError('Internal server error'));
+        }
+
+    }
+
 }
 
 export default RecordController;

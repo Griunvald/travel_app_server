@@ -47,6 +47,20 @@ class RecordRepository {
             }
     }
 
+    async editTextRecord(textRecordId, textValue){
+        const client = await this.pool.connect();
+        try{
+            const updateQuery = `UPDATE text_records SET text_value = $1 WHERE id = $2`;
+            await client.query(updateQuery, [textValue, textRecordId]);
+           } catch(err){
+                console.error(err);
+                throw err;
+            } finally {
+                client.release();
+            }
+
+    }
+
 }
 export default new RecordRepository(dbPool);
 
