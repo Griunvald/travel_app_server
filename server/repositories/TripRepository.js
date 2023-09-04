@@ -96,6 +96,7 @@ class TripRepository {
             LEFT JOIN text_records tr ON r.id = tr.id AND r.type = 'text'
             LEFT JOIN url_records ur ON r.id = ur.id AND r.type = 'url'
             WHERE r.user_id = $1 AND r.trip_id = $2
+            AND (tr.text_value IS NOT NULL OR ur.url_value IS NOT NULL)
             ORDER BY r.order_number ASC;
             `
             const result = await client.query(selectQuery, [userId, tripId]);
