@@ -61,11 +61,13 @@ class RecordRepository {
 
     }
 
-    async deleteRecord(recordId){
+    async deleteRecord(recordId, type){
         const client = await this.pool.connect();
         try{
-            const deleteQuery = `DELETE FROM records WHERE id = $1`;
+            const deleteQuery = `DELETE FROM ${type}_records WHERE id = $1`;
+            const deleteQuery2 = `DELETE FROM record_tags WHERE record_id = $1`;
             await client.query(deleteQuery, [recordId]);
+            await client.query(deleteQuery2, [recordId]);
            } catch(err){
                 console.error(err);
                 throw err;

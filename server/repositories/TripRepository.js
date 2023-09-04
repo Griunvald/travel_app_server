@@ -22,10 +22,10 @@ class TripRepository {
             const searchQuery = `SELECT status FROM trips WHERE user_id = $1 
             ORDER BY created_at DESC`;
             const searchResult = await client.query(searchQuery, [userId]);
-            const tripStatus =  searchResult.rows[0].status;
                if (searchResult.rows.length === 0) {
               return null;
             }
+            const tripStatus =  searchResult.rows[0].status;
             return tripStatus;
             } catch(err){
                 console.error(err);
