@@ -57,6 +57,19 @@ class TagRepository {
                 client.release();
             }
         }
+
+
+        // async addTagToRecord(recordId, tagId){
+        //     const client = await this.pool.connect();
+        //     try {
+        //         await client.query();
+        //     } catch(err){
+        //         console.error(err);
+        //         throw err;
+        //     } finally {
+        //         client.release();
+        //     }
+        // }
 }
 
 export default new TagRepository(dbPool);

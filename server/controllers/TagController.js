@@ -1,8 +1,10 @@
 import AppError from '../middleware/error/AppError.js';
 
 class TagController {
-    constructor(tagRepository){
+    constructor(tagRepository, recordRepository, tagService){
         this.tagRepository = tagRepository;
+        this.recordRepository = recordRepository;
+        this.tagService = tagService;
     }
     
     async deleteTag(req, res, next){
@@ -19,11 +21,12 @@ class TagController {
 
 
     async addTag(req, res, next){
-        const {} = req.body;
+        const { recordId, tags } = req.body;
 
         try{
-            await this.TagRepository.addTag();
-           res.status(200).json({ message: 'Tag was added!'});
+            const tagIds = await this.tagService.createTagsAndReturnIds(tags);
+            await this.recordRepository.associateTagsWithRecord(recordId, tagIds);
+           res.status(200).json({ message: 'Tag(s) were added!'});
         } catch(err) {
             console.error(err);
             next(new AppError('Internal server error'));
