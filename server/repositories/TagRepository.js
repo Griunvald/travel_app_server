@@ -40,6 +40,23 @@ class TagRepository {
                 client.release();
             }
         }
+
+
+        async removeTagFromRecord(recordId, tagId){
+            const client = await this.pool.connect();
+            try {
+                const deleteQuery = `
+                DELETE FROM record_tags 
+                WHERE record_id = $1 AND tag_id = $2;
+                `;
+                await client.query(deleteQuery, [recordId, tagId]);
+            } catch(err){
+                console.error(err);
+                throw err;
+            } finally {
+                client.release();
+            }
+        }
 }
 
 export default new TagRepository(dbPool);
