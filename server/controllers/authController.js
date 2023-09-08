@@ -1,9 +1,8 @@
-// import AuthRepository from '../repositories/AuthRepository.js';
 import AppError from '../middleware/error/AppError.js';
 
 class AuthController {
-    constructor(AuthRepository) {
-        this.authRepository = AuthRepository;
+    constructor(authRepository) {
+        this.authRepository = authRepository;
     }
 
     async register(req, res, next) {

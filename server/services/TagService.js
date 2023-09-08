@@ -1,8 +1,8 @@
 import TagRepository from '../repositories/TagRepository.js';
 
 class TagService {
-    constructor(TagRepository){
-        this.tagRepository = TagRepository;
+    constructor(tagRepository){
+        this.tagRepository = tagRepository;
     }
 
 

@@ -1,9 +1,9 @@
 import AppError from '../middleware/error/AppError.js';
 
 class RecordController {
-    constructor(RecordRepository, TagService){
-        this.recordRepository = RecordRepository;
-        this.tagService = TagService;
+    constructor(recordRepository, tagService){
+        this.recordRepository = recordRepository;
+        this.tagService = tagService;
     }    
 
     async createRecord(req, res, next){

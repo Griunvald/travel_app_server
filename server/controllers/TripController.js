@@ -1,8 +1,8 @@
 import AppError from '../middleware/error/AppError.js';
 
 class TripController {
-    constructor(TripRepository){
-        this.tripRepository = TripRepository;
+    constructor(tripRepository){
+        this.tripRepository = tripRepository;
     }
 
    async createTrip(req, res, next){
