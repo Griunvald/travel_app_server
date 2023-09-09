@@ -8,9 +8,8 @@ class FileController {
     async getSignedUrl(req, res, next){
             const { userId } = req.body;
             try {
-
-               await this.fileRepository.getSignedUrl(userId);
-               res.status(201).json({ message: 'Getted url!'});
+               const signedUrl = await this.fileRepository.getSignedUrl(userId);
+               res.status(200).json({ signedUrl });
             } catch(err) {
                 console.error(err);
                 next(AppError('Internal server error'));
