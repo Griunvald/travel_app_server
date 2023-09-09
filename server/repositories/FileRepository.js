@@ -15,7 +15,7 @@ class FileRepository {
         try {
         const url = await this.s3.getSignedUrlPromise('putObject', {
             Bucket: process.env.AWS_S3_BUCKET,
-            ContentType: 'jpeg',
+            ContentType: 'image/jpeg',
             Key: key
           });
             console.log(url);
