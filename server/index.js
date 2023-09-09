@@ -6,6 +6,7 @@ import authRouter from './routes/authRoute.js';
 import tripRouter from './routes/tripRoute.js';
 import recordRouter from './routes/recordRoute.js';
 import tagRouter from './routes/tagRoute.js';
+import fileRouter from './routes/fileRoute.js';
 import errorHandler from './middleware/error/errorHandler.js';
 const app = express();
 
@@ -15,6 +16,7 @@ app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/trip', tripRouter);
 app.use('/api/v1/record', recordRouter);
 app.use('/api/v1/tag', tagRouter);
+app.use('/api/v1/file', fileRouter);
 app.use(errorHandler);
 
 app.listen(3003, () => {
