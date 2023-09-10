@@ -10,5 +10,6 @@ const followerController = new FollowerController(FollowerRepository);
 router
     .post('/follow-user', authGuard, followerController.followUser.bind(followerController))
     .delete('/unfollow-user', authGuard, followerController.unfollowUser.bind(followerController))
+    .get('/get-followers', authGuard, followerController.getFollowers.bind(followerController))
 
 export default router;

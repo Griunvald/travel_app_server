@@ -27,6 +27,17 @@ class FollowerController {
             }
         }
 
+    async getFollowers(req, res, next){
+            const { userId } = req.body;
+            try {
+               const followers = await this.followerRepository.getFollowers(userId);
+               res.status(200).json({ followers });
+            } catch(err) {
+                console.error(err);
+                next(new AppError('Internal server error'));
+            }
+        }
+
 }
 
 export default FollowerController;
