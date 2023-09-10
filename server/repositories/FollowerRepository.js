@@ -51,6 +51,22 @@ class FollowerRepository {
 
         }    
 
+        async getFollowing(userId){
+            const client = await this.pool.connect();
+            try {
+                const selectQuery = `SELECT username FROM followers JOIN 
+                usernames ON leader_id = usernames.user_id WHERE followers.follower_id = $1`;
+                const result = await client.query(selectQuery, [userId]);
+                return result.rows;
+            } catch(err){
+                console.error(err);
+                throw err;
+            } finally {
+                client.release();
+            }
+
+        }    
+
 }
 
 export default new FollowerRepository(dbPool);
