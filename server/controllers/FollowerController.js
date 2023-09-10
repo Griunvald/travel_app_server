@@ -16,6 +16,17 @@ class FollowerController {
             }
         }
 
+    async unfollowUser(req, res, next){
+            const { leaderId, followerId } = req.body;
+            try {
+               await this.followerRepository.unfollowUser(leaderId, followerId);
+               res.status(200).json({ message: 'Stop following!' });
+            } catch(err) {
+                console.error(err);
+                next(new AppError('Internal server error'));
+            }
+        }
+
 }
 
 export default FollowerController;
