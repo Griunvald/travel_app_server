@@ -26,6 +26,17 @@ class CommentController {
                 next(new AppError('Internal server error'));
             }
         }
+
+    async getComments(req, res, next){
+            const {tripId} = req.body;
+            try {
+               const comments = await this.commentRepository.getComments(tripId);
+               res.status(200).json({ comments });
+            } catch(err) {
+                console.error(err);
+                next(new AppError('Internal server error'));
+            }
+        }
 }
 
 export default CommentController;

@@ -37,6 +37,24 @@ class CommentRepository {
 
         }    
 
+        async getComments(tripId){
+            const client = await this.pool.connect();
+            try {
+                const selectQuery = `
+                SELECT * FROM comments WHERE trip_id = $1;
+                `;
+                const result = await client.query(selectQuery, [tripId]);
+                return result.rows;
+            } catch(err){
+                console.error(err);
+                throw err;
+            } finally {
+                client.release();
+            }
+
+        }    
+
+
 }
 
 export default new CommentRepository(dbPool);
