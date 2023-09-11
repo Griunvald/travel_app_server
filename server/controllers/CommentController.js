@@ -15,6 +15,17 @@ class CommentController {
                 next(new AppError('Internal server error'));
             }
         }
+
+    async deleteComment(req, res, next){
+            const {commentId} = req.body;
+            try {
+               await this.commentRepository.deleteComment(commentId);
+               res.status(200).json({message: 'Comment was deleted!'});
+            } catch(err) {
+                console.error(err);
+                next(new AppError('Internal server error'));
+            }
+        }
 }
 
 export default CommentController;

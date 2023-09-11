@@ -6,5 +6,6 @@ const router = Router();
 const commentController = new CommentController(CommentRepository);
 
 router.post('/create-comment', commentController.createComment.bind(commentController))
+router.delete('/delete-comment', commentController.deleteComment.bind(commentController))
 
 export default router;

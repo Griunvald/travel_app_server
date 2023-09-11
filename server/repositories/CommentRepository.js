@@ -21,6 +21,22 @@ class CommentRepository {
 
         }    
 
+        async deleteComment(commentId){
+            const client = await this.pool.connect();
+            try {
+                const deleteQuery = `
+                DELETE FROM comments WHERE id = $1;
+                `;
+                await client.query(deleteQuery, [commentId]);
+            } catch(err){
+                console.error(err);
+                throw err;
+            } finally {
+                client.release();
+            }
+
+        }    
+
 }
 
 export default new CommentRepository(dbPool);
