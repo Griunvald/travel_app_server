@@ -21,12 +21,13 @@ class CommentRepository {
 
         }    
 
-        async deleteComment(commentId){
+        async deleteComment(commentId, commentOwner, userId){
             const client = await this.pool.connect();
             try {
                 const deleteQuery = `
                 DELETE FROM comments WHERE id = $1;
                 `;
+                if(commentOwner !== userId) return null;
                 await client.query(deleteQuery, [commentId]);
             } catch(err){
                 console.error(err);

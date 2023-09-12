@@ -17,10 +17,15 @@ class CommentController {
         }
 
     async deleteComment(req, res, next){
-            const {commentId} = req.body;
+            const {commentId, commentOwner, userId} = req.body;
             try {
-               await this.commentRepository.deleteComment(commentId);
-               res.status(200).json({message: 'Comment was deleted!'});
+               const result = await this.commentRepository.deleteComment(commentId, commentOwner, userId);
+            
+               if(result === null){
+                   return res.status(200).json({message: 'You can\'t delete comment'});
+               } else {
+                   res.status(200).json({message: 'Comment was deleted!'});
+               }
             } catch(err) {
                 console.error(err);
                 next(new AppError('Internal server error'));
