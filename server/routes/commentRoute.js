@@ -8,6 +8,7 @@ const commentController = new CommentController(CommentRepository);
 
 router.post('/create-comment', authGuard, commentController.createComment.bind(commentController))
 router.delete('/delete-comment', authGuard, commentController.deleteComment.bind(commentController))
+router.put('/edit-comment', commentController.editComment.bind(commentController))
 router.get('/get-comments', commentController.getComments.bind(commentController))
 
 export default router;

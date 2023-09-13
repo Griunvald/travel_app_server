@@ -55,6 +55,23 @@ class CommentRepository {
 
         }    
 
+        async editComment(commentId, commentOwner, userId, body){
+            const client = await this.pool.connect();
+            try {
+                const updateQuery = `
+                UPDATE comments SET body = $1 WHERE id = $2;
+                `;
+                if(commentOwner !== userId) return null;
+                await client.query(updateQuery, [body, commentId]);
+            } catch(err){
+                console.error(err);
+                throw err;
+            } finally {
+                client.release();
+            }
+
+        }    
+
 
 }
 

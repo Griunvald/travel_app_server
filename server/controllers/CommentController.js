@@ -42,6 +42,22 @@ class CommentController {
                 next(new AppError('Internal server error'));
             }
         }
+
+    async editComment(req, res, next){
+            const {commentId, commentOwner, userId, body} = req.body;
+            try {
+               const result = await this.commentRepository.editComment(commentId, commentOwner, userId, body);
+            
+               if(result === null){
+                   return res.status(200).json({message: 'You can\'t edit comment'});
+               } else {
+                   res.status(200).json({message: 'Comment was updated!'});
+               }
+            } catch(err) {
+                console.error(err);
+                next(new AppError('Internal server error'));
+            }
+        }
 }
 
 export default CommentController;
