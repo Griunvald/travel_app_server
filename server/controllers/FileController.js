@@ -12,7 +12,7 @@ class FileController {
                res.status(200).json({ signedUrl });
             } catch(err) {
                 console.error(err);
-                next(AppError('Internal server error'));
+                next(new AppError('Internal server error'));
             }
         }
 
