@@ -34,12 +34,13 @@ class AuthRepository {
 
             const userInsertQuery = `INSERT INTO users (email, fullname, password, username)
             VALUES ($1, $2, $3, $4)
-            RETURNING id, email`;
+            RETURNING id, email, username`;
             
             const values = [email, fullname, hashedPassword, username];
 
             const userInsertResult = await  this.pool.query(userInsertQuery, values);
             const userId = userInsertResult.rows[0].id;
+            const userInfo = userInsertResult.rows[0].username;
 
             const usernameInsertQuery = `INSERT INTO usernames (user_id, username) VALUES ($1, $2)`;
             const usernameInsertResult  = await client.query(usernameInsertQuery, [userId, username]);
@@ -48,7 +49,7 @@ class AuthRepository {
 
             const token = await this.generateToken(userId);
 
-            return token;
+            return {token, userInfo};
             
         } catch (err){
             await client.query('ROLLBACK')
@@ -92,7 +93,8 @@ class AuthRepository {
             }
             if(user && await this.verifyPassword(user, password)) {
                 const token = await this.generateToken(user.rows[0].id);
-                return token;
+                const userInfo = user.rows[0];
+                return {token, userInfo};
              } else {
                  return null;
              }

@@ -9,7 +9,10 @@ class AuthController {
         const { email, fullname, username, password } = req.body;
         try {
         const token = await this.authRepository.createUser(email, fullname, username, password);
+        const userInfo = { username };
+        const userInfoStr = JSON.stringify(userInfo);
         res.cookie('access_token', token, {httpOnly: true});
+        res.cookie('user_info', userInfoStr); 
         res.status(201).json({ message: 'User was created!' });
         } catch (err) {
             if(err.message === 'Username already taken!') {
@@ -24,9 +27,10 @@ class AuthController {
 async login(req, res, next) {
        const {input, password} = req.body;
        try {
-           const token = await this.authRepository.login(input, password)
+           const {token, userInfo} = await this.authRepository.login(input, password)
            if(!token) return res.status(401).json({message: 'Account not found!'});
            res.cookie('access_token', token, {httpOnly: true});
+           res.cookie('user_info', userInfo.username);
            res.status(200).json({ message: 'Cookie set!' });
        }catch(err){
            console.error(err);
@@ -37,6 +41,7 @@ async login(req, res, next) {
     logout(req, res, next){
         try{
            res.cookie('access_token', '', {httpOnly: true, expires: new Date(0)});
+           res.cookie('user_info', '', {expires: new Date(0)});
            res.status(200).json({ message: 'Logout successfully!' });
         }catch(err){
            console.error(err);
