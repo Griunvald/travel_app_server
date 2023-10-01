@@ -40,7 +40,7 @@ class AuthRepository {
 
             const userInsertResult = await  this.pool.query(userInsertQuery, values);
             const userId = userInsertResult.rows[0].id;
-            const userInfo = userInsertResult.rows[0].username;
+            const userInfo = JSON.stringify({username: userInsertResult.rows[0].username});
 
             const usernameInsertQuery = `INSERT INTO usernames (user_id, username) VALUES ($1, $2)`;
             const usernameInsertResult  = await client.query(usernameInsertQuery, [userId, username]);
@@ -93,7 +93,8 @@ class AuthRepository {
             }
             if(user && await this.verifyPassword(user, password)) {
                 const token = await this.generateToken(user.rows[0].id);
-                const userInfo = user.rows[0];
+                const userInfo = JSON.stringify({username: user.rows[0].username});
+                console.log(userInfo);
                 return {token, userInfo};
              } else {
                  return null;
