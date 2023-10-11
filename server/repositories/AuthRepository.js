@@ -93,7 +93,9 @@ class AuthRepository {
             }
             if(user && await this.verifyPassword(user, password)) {
                 const token = await this.generateToken(user.rows[0].id);
-                const userInfo = JSON.stringify({username: user.rows[0].username});
+                const userInfo = JSON.stringify({
+                    username: user.rows[0].username,
+                    userId: user.rows[0].id});
                 console.log(userInfo);
                 return {token, userInfo};
              } else {

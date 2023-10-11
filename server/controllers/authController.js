@@ -29,7 +29,7 @@ async login(req, res, next) {
            if(!token) return res.status(401).json({message: 'Account not found!'});
            res.cookie('access_token', token, {httpOnly: true});
            res.cookie('user_info', userInfo);
-           res.status(200).json({ message: 'Cookie set!' });
+           res.status(200).json( userInfo );
        }catch(err){
            console.error(err);
            next(new AppError('Internal server error', 500));
