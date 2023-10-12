@@ -18,7 +18,7 @@ class FileRepository {
             ContentType: 'image/jpeg',
             Key: key
           });
-            return url;
+            return {url, key};
         } catch (err){
             console.error(err);
         }
