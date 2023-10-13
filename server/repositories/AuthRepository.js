@@ -40,7 +40,7 @@ class AuthRepository {
 
             const userInsertResult = await  this.pool.query(userInsertQuery, values);
             const userId = userInsertResult.rows[0].id;
-            const userInfo = JSON.stringify({username: userInsertResult.rows[0].username});
+            const userInfo = JSON.stringify({username: userInsertResult.rows[0].username, userId });
 
             const usernameInsertQuery = `INSERT INTO usernames (user_id, username) VALUES ($1, $2)`;
             const usernameInsertResult  = await client.query(usernameInsertQuery, [userId, username]);
