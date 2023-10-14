@@ -53,6 +53,16 @@ class TripController {
         }
     }
 
+    async getAllTripsPreview(req, res, next){
+        try {
+            const allTrips = await this.tripRepository.getAllTripsPreview();
+            res.status(200).json(allTrips);
+        } catch (err){
+           console.error(err);
+           next(new AppError('Internal server error', 500));
+        }
+    }
+
    async getCurrentTripRecordsWithTags(req, res, next){
         const {userId} = req.body;
         try {

@@ -72,6 +72,28 @@ class TripRepository {
     }
 
 
+    async getAllTripsPreview(){
+        const client = await this.pool.connect();
+        try{
+            const searchQuery = `SELECT id, title, description, url, created_at FROM trips`;
+            const searchResult = await client.query(searchQuery);
+            const results = [];
+
+            for (const row of searchResult.rows) {
+              const { id, title, description, url, created_at: createdAt } = row;
+              results.push({ id, title, description, url, createdAt });
+            }
+
+            return results;
+        } catch(err){
+            console.error(err);
+            throw err;
+        } finally {
+            client.release();
+        }
+    }
+
+
     async getCurrentTripRecordsWithTags(userId){
         const client = await this.pool.connect();
         try{
