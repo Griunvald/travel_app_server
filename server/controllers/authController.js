@@ -11,7 +11,8 @@ class AuthController {
         const {token, userInfo} = await this.authRepository.createUser(email, fullname, username, password);
         res.cookie('access_token', token, {httpOnly: true});
         res.cookie('user_info', userInfo); 
-        res.status(201).json({ message: 'User was created!', userInfo});
+            console.log("user info from server", userInfo);
+        res.status(201).json({ userInfo});
         } catch (err) {
             if(err.message === 'Username already taken!') {
             next(new AppError(err.message, 400));
