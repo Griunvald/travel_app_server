@@ -12,8 +12,8 @@ class TripRepository {
         const client = await this.pool.connect();
         const insertQuery = `INSERT INTO trips (user_id, username, title, description, url) VALUES ($1, $2, $3, $4, $5) RETURNING id`;
         const trip = await client.query(insertQuery, [userId, username, title, description, url]);
-        const token = await signJwt(trip.rows[0].id);
-        return token;
+        const cookie = JSON.stringify({tripId: trip.rows[0].id});
+        return cookie;
     }
 
     async checkCurrentTripStatus(userId){
