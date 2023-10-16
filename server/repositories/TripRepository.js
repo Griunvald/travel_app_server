@@ -75,13 +75,13 @@ class TripRepository {
     async getAllTripsPreview(){
         const client = await this.pool.connect();
         try{
-            const searchQuery = `SELECT id, title, description, url, created_at FROM trips`;
+            const searchQuery = `SELECT id, username, title, description, url, created_at FROM trips`;
             const searchResult = await client.query(searchQuery);
             const results = [];
 
             for (const row of searchResult.rows) {
-              const { id, title, description, url, created_at: createdAt } = row;
-              results.push({ id, title, description, url, createdAt });
+              const { id, username, title, description, url, created_at: createdAt } = row;
+              results.push({ id, username, title, description, url, createdAt });
             }
 
             return results;
