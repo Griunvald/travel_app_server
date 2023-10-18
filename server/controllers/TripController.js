@@ -6,9 +6,9 @@ class TripController {
     }
 
    async createTrip(req, res, next){
-       const {userId, title, description, url} = req.body;
+       const {userId, username, title, description, url} = req.body;
         try {
-           const trip = await this.tripRepository.createTrip(userId, title, description, url);
+           const trip = await this.tripRepository.createTrip(userId, username, title, description, url);
             if(trip === 'open') return res.status(400).json({message: 'Please, close your previous trip!'})
             res.cookie('trip_info', trip);
             res.status(201).json({message: 'Trip was created!'})
