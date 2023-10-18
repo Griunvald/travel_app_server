@@ -10,8 +10,8 @@ class TripRepository {
         console.log(tripStatus);
         if (tripStatus === 'open') return 'open';
         const client = await this.pool.connect();
-        const insertQuery = `INSERT INTO trips (user_id, username, title, description, url) VALUES ($1, $2, $3, $4, $5) RETURNING id`;
-        const trip = await client.query(insertQuery, [userId, username, title, description, url]);
+        const insertQuery = `INSERT INTO trips (user_id, title, description, url) VALUES ($1, $2, $3, $4) RETURNING id`;
+        const trip = await client.query(insertQuery, [userId, title, description, url]);
         const cookie = JSON.stringify({tripId: trip.rows[0].id});
         return cookie;
     }
@@ -75,7 +75,8 @@ class TripRepository {
     async getAllTripsPreview(){
         const client = await this.pool.connect();
         try{
-            const searchQuery = `SELECT id, username, title, description, url, created_at FROM trips`;
+            const searchQuery = `SELECT trips.id, usernames.username, trips.title, trips.description, trips.url, trips.created_at FROM trips
+            JOIN usernames ON trips.user_id = usernames.user_id`;
             const searchResult = await client.query(searchQuery);
             const results = [];
 
