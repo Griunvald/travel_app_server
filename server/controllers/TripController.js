@@ -46,7 +46,7 @@ class TripController {
         const {userId} = req.body;
         try {
             const currentTrip = await this.tripRepository.getCurrentTrip(userId);
-            res.status(200).json({message: currentTrip})
+            res.status(200).json(currentTrip)
         } catch (err){
            console.error(err);
            next(new AppError('Internal server error', 500));
