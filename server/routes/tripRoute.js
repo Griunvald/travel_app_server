@@ -9,7 +9,7 @@ const tripController = new TripController(TripRepository);
 router
     .post('/create-trip', authGuard, tripController.createTrip.bind(tripController))
     .patch('/close-trip', authGuard, tripController.endCurrentTrip.bind(tripController))
-    .get('/get-trip', tripController.getCurrentTrip.bind(tripController))
+    .post('/get-trip', tripController.getCurrentTrip.bind(tripController))
     .get('/get-all-trips-preview', tripController.getAllTripsPreview.bind(tripController))
     .get('/get-current-trip-records-with-tags', 
         tripController.getCurrentTripRecordsWithTags.bind(tripController))
