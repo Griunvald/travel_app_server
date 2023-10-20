@@ -61,8 +61,10 @@ class TripRepository {
             const searchQuery = `SELECT id, title, description, url, created_at FROM trips WHERE user_id = $1 
             ORDER BY created_at DESC LIMIT 1`;
             const searchResult = await client.query(searchQuery, [userId]);
-            const { id, title, description, url, created_at: createdAt } =  searchResult.rows[0];
-            return { id, title, description, url, createdAt };
+            if(searchResult.rows.length > 0){
+                const { id, title, description, url, created_at: createdAt } =  searchResult.rows[0];
+                return { id, title, description, url, createdAt };
+            }
         } catch(err){
             console.error(err);
             throw err;
@@ -71,8 +73,8 @@ class TripRepository {
         }
     }
 
-
     async getAllTripsPreview(){
+
         const client = await this.pool.connect();
         try{
             const searchQuery = `SELECT trips.id, usernames.username, trips.title, trips.description, trips.url, trips.created_at FROM trips
