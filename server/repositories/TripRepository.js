@@ -1,6 +1,6 @@
 import dbPool from '../db.js';
 import { signJwt } from '../utils/jwtUtils.js';
-import { toCamelCase } from '../utils/toCamelCase.js';
+import { toCamelCaseDeep } from '../utils/toCamelCase.js';
 
 class TripRepository {
     constructor(dbPool){
@@ -127,18 +127,9 @@ class TripRepository {
             ORDER BY r.order_number ASC;
             `;
 
-    const result = await client.query(selectQuery, [userId, tripId]);
-
-    const camelCaseResults = result.rows.map(row => {
-      const newRow = {};
-      for (const field in row) {
-        newRow[toCamelCase(field)] = row[field];
-      }
-      return newRow;
-    });
-
-        return camelCaseResults;
-
+            const result = await client.query(selectQuery, [userId, tripId]);
+            
+            return toCamelCaseDeep(result);
       } catch (err) {
         console.error(err);
         throw err;
