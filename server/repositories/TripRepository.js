@@ -1,5 +1,6 @@
 import dbPool from '../db.js';
 import { signJwt } from '../utils/jwtUtils.js';
+import { toCamelCase } from '../utils/toCamelCase.js';
 
 class TripRepository {
     constructor(dbPool){
@@ -97,42 +98,55 @@ class TripRepository {
     }
 
 
-    async getCurrentTripRecordsWithTags(userId){
-        const client = await this.pool.connect();
-        try{
+
+    async getCurrentTripRecordsWithTags(userId) {
+  const client = await this.pool.connect();
+  try {
             const { id: tripId } = await this.getCurrentTrip(userId);
             const selectQuery = `
-            WITH RecordTags AS (
-  SELECT rt.record_id, t.id AS tag_id, t.tag_name
-  FROM record_tags rt
-  JOIN tags t ON rt.tag_id = t.id
-)
+              WITH RecordTags AS (
+              SELECT rt.record_id, t.id AS tag_id, t.tag_name
+              FROM record_tags rt
+              JOIN tags t ON rt.tag_id = t.id
+            )
 
-SELECT
-  r.*,
-  tr.text_value,
-  ur.url_value,
-  (
-    SELECT JSON_AGG(json_build_object('id', rt.tag_id, 'tag_name', rt.tag_name))
-    FROM RecordTags rt
-    WHERE rt.record_id = r.id
-  ) AS record_tags
-FROM records r
-LEFT JOIN text_records tr ON r.id = tr.id AND r.type = 'text'
-LEFT JOIN url_records ur ON r.id = ur.id AND r.type = 'url'
-WHERE r.user_id = $1 AND r.trip_id = $2
-AND (tr.text_value IS NOT NULL OR ur.url_value IS NOT NULL)
-ORDER BY r.order_number ASC;
-`;
-            const result = await client.query(selectQuery, [userId, tripId]);
-            return result;
-        } catch(err){
-            console.error(err);
-            throw err;
-        } finally {
-            client.release();
-        }
+            SELECT
+              r.*,
+              tr.text_value,
+              ur.url_value,
+              (
+                SELECT JSON_AGG(json_build_object('id', rt.tag_id, 'tag_name', rt.tag_name))
+                FROM RecordTags rt
+                WHERE rt.record_id = r.id
+              ) AS record_tags
+            FROM records r
+            LEFT JOIN text_records tr ON r.id = tr.id AND r.type = 'text'
+            LEFT JOIN url_records ur ON r.id = ur.id AND r.type = 'url'
+            WHERE r.user_id = $1 AND r.trip_id = $2
+            AND (tr.text_value IS NOT NULL OR ur.url_value IS NOT NULL)
+            ORDER BY r.order_number ASC;
+            `;
+
+    const result = await client.query(selectQuery, [userId, tripId]);
+
+    const camelCaseResults = result.rows.map(row => {
+      const newRow = {};
+      for (const field in row) {
+        newRow[toCamelCase(field)] = row[field];
+      }
+      return newRow;
+    });
+
+        return camelCaseResults;
+
+      } catch (err) {
+        console.error(err);
+        throw err;
+      } finally {
+        client.release();
+      }
     }
+
 }
 
 export default new TripRepository(dbPool);
