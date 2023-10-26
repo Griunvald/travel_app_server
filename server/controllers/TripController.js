@@ -64,10 +64,12 @@ class TripController {
     }
 
    async getCurrentTripRecordsWithTags(req, res, next){
-        const {userId} = req.body;
+        const userId = JSON.parse(req.query.userId);
+       console.log("req.query is: ", req.query);
+       console.log(userId);
         try {
             const currentTripRecordsData = await this.tripRepository.getCurrentTripRecordsWithTags(userId);
-            res.status(200).json({message: currentTripRecordsData})
+            res.status(200).json(currentTripRecordsData.rows)
         } catch (err){
            console.error(err);
            next(new AppError('Internal server error', 500));
