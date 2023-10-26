@@ -3,7 +3,9 @@ const toCamelCase = (str) => {
 };
 
 export const toCamelCaseDeep = (obj) => {
-  if (Array.isArray(obj)) {
+  if (obj instanceof Date) {
+    return obj;
+  } else if (Array.isArray(obj)) {
     return obj.map(v => toCamelCaseDeep(v));
   } else if (typeof obj === 'object' && obj !== null) {
     return Object.fromEntries(
@@ -15,3 +17,4 @@ export const toCamelCaseDeep = (obj) => {
   }
   return obj;
 };
+
