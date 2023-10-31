@@ -1,8 +1,9 @@
 import AppError from '../middleware/error/AppError.js';
 
 class TripController {
-    constructor(tripRepository){
+    constructor(tripRepository, tripService){
         this.tripRepository = tripRepository;
+        this.tripService = tripService;
     }
 
    async createTrip(req, res, next){
@@ -70,6 +71,18 @@ class TripController {
         try {
             const currentTripRecordsData = await this.tripRepository.getCurrentTripRecordsWithTags(userId);
             res.status(200).json(currentTripRecordsData.rows)
+        } catch (err){
+           console.error(err);
+           next(new AppError('Internal server error', 500));
+        }
+
+   }
+
+   async getFullTrip(req, res, next){
+        const userId = JSON.parse(req.query.userId);
+        try {
+            const fullTrip = await this.tripService.getFullTrip(userId);
+            res.status(200).json(fullTrip);
         } catch (err){
            console.error(err);
            next(new AppError('Internal server error', 500));
