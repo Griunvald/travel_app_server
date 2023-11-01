@@ -59,12 +59,13 @@ class TripRepository {
     async getCurrentTrip(userId){
         const client = await this.pool.connect();
         try{
-            const searchQuery = `SELECT id, title, description, url, created_at FROM trips WHERE user_id = $1 
+            const searchQuery = `SELECT t.id, t.user_id, u.username, t.title, t.description, t.url, t.created_at 
+            FROM trips AS t JOIN usernames AS u ON t.user_id = u.user_id WHERE t.user_id = $1 
             ORDER BY created_at DESC LIMIT 1`;
             const searchResult = await client.query(searchQuery, [userId]);
             if(searchResult.rows.length > 0){
-                const { id, title, description, url, created_at: createdAt } =  searchResult.rows[0];
-                return { id, title, description, url, createdAt };
+                const { id, title, username, description, url, created_at: createdAt } =  searchResult.rows[0];
+                return { id, username, title, description, url, createdAt };
             }
         } catch(err){
             console.error(err);
