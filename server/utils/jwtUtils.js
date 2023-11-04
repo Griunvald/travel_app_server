@@ -8,7 +8,6 @@ export const signJwt = async (...args) => {
 
     try {
         const token = await jwt.sign(payload, secretKey, { expiresIn });
-        console.log(token);
         return token;
     } catch (err){
        throw err;

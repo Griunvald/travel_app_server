@@ -8,7 +8,6 @@ class RecordController {
 
     async createRecord(req, res, next){
         const {userId, tripId, type, data, tags } = req.body;
-        console.log(tags);
         let recordId;
         try{
             const recordId = await this.recordRepository.createRecord(userId, tripId, type, data);

@@ -11,7 +11,6 @@ class TripController {
         try {
            const trip = await this.tripRepository.createTrip(userId, username, title, description, url);
             if(trip === 'open') return res.status(400).json({message: 'Please, close your previous trip!'})
-            console.log("trip is: ", trip);
             res.status(201).json(trip);
         } catch(err){
             if (title.trim().length === 0) {
@@ -30,7 +29,6 @@ class TripController {
         const {userId} = req.body;
         try {
             const status = await this.tripRepository.endCurrentTrip(userId);
-            console.log("Trip status is: ", status);
             if(status === 'closed'){
                return res.status(200).json({message: 'Trip already closed!'})
             } else {
@@ -66,8 +64,6 @@ class TripController {
 
    async getCurrentTripRecordsWithTags(req, res, next){
         const userId = JSON.parse(req.query.userId);
-       console.log("req.query is: ", req.query);
-       console.log(userId);
         try {
             const currentTripRecordsData = await this.tripRepository.getCurrentTripRecordsWithTags(userId);
             res.status(200).json(currentTripRecordsData.rows)

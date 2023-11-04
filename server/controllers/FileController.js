@@ -8,7 +8,6 @@ class FileController {
     async getSignedUrl(req, res, next){
         const userInfo = JSON.parse(req.cookies.user_info);
 const userId = userInfo.userId;
-        console.log(userId);
             try {
                const signedUrl = await this.fileRepository.getSignedUrl(userId);
                res.status(200).json({ signedUrl });

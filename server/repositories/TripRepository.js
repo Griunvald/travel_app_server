@@ -8,7 +8,6 @@ class TripRepository {
     }
     async createTrip(userId, username, title, description, url){
         const tripStatus = await this.checkCurrentTripStatus(userId);
-        console.log(tripStatus);
         if (tripStatus === 'open') return 'open';
         const client = await this.pool.connect();
         const insertQuery = `INSERT INTO trips (user_id, title, description, url) VALUES ($1, $2, $3, $4) RETURNING id`;

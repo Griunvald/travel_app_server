@@ -8,8 +8,6 @@ const authGuard = async (req, res, next) => {
     }
 
     const userId = await AuthRepository.getUserIdFromToken(token);
-    console.log(userId);
-
     next();
 
 }

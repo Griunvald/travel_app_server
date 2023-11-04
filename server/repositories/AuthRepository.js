@@ -96,7 +96,6 @@ class AuthRepository {
                 const userInfo = JSON.stringify({
                     username: user.rows[0].username,
                     userId: user.rows[0].id});
-                console.log(userInfo);
                 return {token, userInfo};
              } else {
                  return null;
@@ -109,7 +108,6 @@ class AuthRepository {
     async getUserIdFromToken(token){
         const decodedToken = await verifyJwt(token);
         const userId = decodedToken.userId;
-        console.log(userId);
         return userId;
         
     }
