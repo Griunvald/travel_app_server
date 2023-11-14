@@ -7,6 +7,7 @@ const profileController = new ProfileController(ProfileRepository);
 
 router
     .put('/update-profile', profileController.updateProfile.bind(profileController))
+    .get('/get-profile', profileController.getProfile.bind(profileController))
 
 export default router;
 
