@@ -1,4 +1,5 @@
 import dbPool from '../db.js';
+import { toCamelCaseDeep } from '../utils/toCamelCase.js';
 
 class ProfileRepository {
     constructor(dbPool){
@@ -30,7 +31,7 @@ class ProfileRepository {
         const query = `SELECT about, avatar, country, home_town, gender FROM profiles WHERE user_id = $1`
             try {
                 const result = await client.query(query, [userId]);
-                return result.rows[0];
+                return toCamelCaseDeep(result.rows[0]);
             } catch (error) {
                 console.error('Error in getProfile:', error);
                 throw error;
