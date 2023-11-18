@@ -37,6 +37,27 @@ class ProfileRepository {
                 throw error;
             }
         }
+
+    async getProfiles(limit, offset) {
+    const client = await this.pool.connect();
+
+    const query = `
+        SELECT about, avatar, country, home_town, gender 
+        FROM profiles 
+        ORDER BY user_id 
+        LIMIT $1 OFFSET $2`;
+
+    try {
+        const result = await client.query(query, [limit, offset]);
+        return result.rows.map(row => toCamelCaseDeep(row));
+    } catch (error) {
+        console.error('Error in getProfiles:', error);
+        throw error;
+    } finally {
+        client.release();
+    }
+}
+
 };
 
 
