@@ -64,6 +64,7 @@ class TripController {
 
    async getCurrentTripRecordsWithTags(req, res, next){
         const userId = JSON.parse(req.query.userId);
+        console.log(userId);
         try {
             const currentTripRecordsData = await this.tripRepository.getCurrentTripRecordsWithTags(userId);
             res.status(200).json(currentTripRecordsData.rows)
