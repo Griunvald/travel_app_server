@@ -6,9 +6,10 @@ class FollowerController {
     }    
 
     async followUser(req, res, next){
-            const { leaderId, followerId } = req.body;
+            const { leaderId } = req.body;
+            const { userId } = JSON.parse(req.cookies.user_info);
             try {
-               await this.followerRepository.followUser(leaderId, followerId);
+               await this.followerRepository.followUser(leaderId, userId);
                res.status(201).json({ message: 'Start following!' });
             } catch(err) {
                 console.error(err);
@@ -39,7 +40,7 @@ class FollowerController {
         }
 
     async getFollowing(req, res, next){
-            const { userId } = req.body;
+            const { userId } = JSON.parse(req.cookies.user_info);
             try {
                const following = await this.followerRepository.getFollowing(userId);
                res.status(200).json({ following });
