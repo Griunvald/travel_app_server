@@ -1,55 +1,56 @@
 import AppError from '../middleware/error/AppError.js';
 
 class FollowerController {
-    constructor(followerRepository){
-        this.followerRepository = followerRepository;
-    }    
+  constructor(followerRepository) {
+    this.followerRepository = followerRepository;
+  }
 
-    async followUser(req, res, next){
-            const { leaderId } = req.body;
-            const { userId } = JSON.parse(req.cookies.user_info);
-            try {
-               await this.followerRepository.followUser(leaderId, userId);
-               res.status(201).json({ message: 'Start following!' });
-            } catch(err) {
-                console.error(err);
-                next(new AppError('Internal server error'));
-            }
-        }
+  async followUser(req, res, next) {
+    const { leaderId } = req.body;
+    const { userId } = JSON.parse(req.cookies.user_info);
+    try {
+      await this.followerRepository.followUser(leaderId, userId);
+      res.status(201).json({ message: 'Start following!' });
+    } catch (err) {
+      console.error(err);
+      next(new AppError('Internal server error'));
+    }
+  }
 
-    async unfollowUser(req, res, next){
-            const { leaderId, followerId } = req.body;
-            try {
-               await this.followerRepository.unfollowUser(leaderId, followerId);
-               res.status(200).json({ message: 'Stop following!' });
-            } catch(err) {
-                console.error(err);
-                next(new AppError('Internal server error'));
-            }
-        }
+  async unfollowUser(req, res, next) {
+    const { leaderId } = req.body;
+    const { userId } = JSON.parse(req.cookies.user_info);
+    try {
+      await this.followerRepository.unfollowUser(leaderId, userId);
+      res.status(200).json({ message: 'Stop following!' });
+    } catch (err) {
+      console.error(err);
+      next(new AppError('Internal server error'));
+    }
+  }
 
-    async getFollowers(req, res, next){
-            const { userId } = req.body;
-            try {
-               const followers = await this.followerRepository.getFollowers(userId);
-               res.status(200).json({ followers });
-            } catch(err) {
-                console.error(err);
-                next(new AppError('Internal server error'));
-            }
-        }
+  async getFollowers(req, res, next) {
+    const { userId } = req.body;
+    try {
+      const followers = await this.followerRepository.getFollowers(userId);
+      res.status(200).json({ followers });
+    } catch (err) {
+      console.error(err);
+      next(new AppError('Internal server error'));
+    }
+  }
 
-    async getFollowing(req, res, next){
-            const { userId } = JSON.parse(req.cookies.user_info);
-            try {
-               const following = await this.followerRepository.getFollowing(userId);
+  async getFollowing(req, res, next) {
+    const { userId } = JSON.parse(req.cookies.user_info);
+    try {
+      const following = await this.followerRepository.getFollowing(userId);
       console.log(following);
-               res.status(200).json({ following });
-            } catch(err) {
-                console.error(err);
-                next(new AppError('Internal server error'));
-            }
-        }
+      res.status(200).json({ following });
+    } catch (err) {
+      console.error(err);
+      next(new AppError('Internal server error'));
+    }
+  }
 }
 
 export default FollowerController;
