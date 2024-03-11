@@ -43,6 +43,7 @@ class FollowerController {
             const { userId } = JSON.parse(req.cookies.user_info);
             try {
                const following = await this.followerRepository.getFollowing(userId);
+      console.log(following);
                res.status(200).json({ following });
             } catch(err) {
                 console.error(err);
