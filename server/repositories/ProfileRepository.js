@@ -31,7 +31,8 @@ class ProfileRepository {
         const query = `SELECT about, avatar, country, home_town, gender FROM profiles WHERE user_id = $1`
             try {
                 const result = await client.query(query, [userId]);
-                return toCamelCaseDeep(result.rows[0]);
+                const profile = result.rows[0] ? toCamelCaseDeep(result.rows[0]) : {};
+                return profile; 
             } catch (error) {
                 console.error('Error in getProfile:', error);
                 throw error;
