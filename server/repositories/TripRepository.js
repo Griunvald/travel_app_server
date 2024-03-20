@@ -102,7 +102,7 @@ class TripRepository {
     async getCurrentTripRecordsWithTags(userId) {
   const client = await this.pool.connect();
   try {
-            const { id: tripId } = await this.getCurrentTrip(userId);
+            const { id: tripId } = (await this.getCurrentTrip(userId)) ?? {};
             const selectQuery = `
               WITH RecordTags AS (
               SELECT rt.record_id, t.id AS tag_id, t.tag_name
