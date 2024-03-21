@@ -41,7 +41,7 @@ class FollowerRepository {
                 const selectQuery = `SELECT username FROM followers JOIN 
                 usernames ON follower_id = usernames.user_id WHERE followers.leader_id = $1`;
                 const result = await client.query(selectQuery, [userId]);
-                console.log(result.rows);
+      return result.rows;
             } catch(err){
                 console.error(err);
                 throw err;
@@ -67,6 +67,7 @@ class FollowerRepository {
                     userId: userId,
                     followingUsersIds: result.rows.map(row => row.following_user_id) 
                 };
+      
                 return followingData;
             } catch(err) {
                 console.error(err);

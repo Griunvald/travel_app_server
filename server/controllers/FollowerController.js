@@ -1,8 +1,9 @@
 import AppError from '../middleware/error/AppError.js';
 
 class FollowerController {
-  constructor(followerRepository) {
+  constructor(followerRepository, followService) {
     this.followerRepository = followerRepository;
+    this.followService = followService;
   }
 
   async followUser(req, res, next) {
@@ -44,13 +45,25 @@ class FollowerController {
     const { userId } = JSON.parse(req.cookies.user_info);
     try {
       const following = await this.followerRepository.getFollowing(userId);
-      console.log(following);
       res.status(200).json({ following });
     } catch (err) {
       console.error(err);
       next(new AppError('Internal server error'));
     }
   }
+
+  async getFollowStats(req, res, next) {
+    const { userId } = JSON.parse(req.cookies.user_info);
+    try {
+      const stats = await this.followService.getFollowStats(userId);
+      res.status(200).json(stats);
+    } catch (err) {
+      console.error(err);
+      next(new AppError('Internal server error'));
+    }
+  }
+
+
 }
 
 export default FollowerController;
