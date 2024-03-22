@@ -138,6 +138,21 @@ class TripRepository {
       }
     }
 
+
+    async getTripsCount(userId){
+        const client = await this.pool.connect();
+        try{
+            const searchQuery = `SELECT COUNT(*) as trips_count FROM trips WHERE user_id = $1;`
+            const searchResult = await client.query(searchQuery,[userId]);
+            return searchResult.rows[0].trips_count;
+        } catch(err){
+            console.error(err);
+            throw err;
+        } finally {
+            client.release();
+        }
+    }
+
 }
 
 export default new TripRepository(dbPool);

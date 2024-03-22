@@ -13,6 +13,7 @@ router
     .post('/get-trip', tripController.getCurrentTrip.bind(tripController))
     .get('/get-full-trip', tripController.getFullTrip.bind(tripController))
     .get('/get-all-trips-preview', tripController.getAllTripsPreview.bind(tripController))
+    .get('/get-trips-count', tripController.getTripsCount.bind(tripController))
     .get('/get-current-trip-records-with-tags', 
         tripController.getCurrentTripRecordsWithTags.bind(tripController))
 
