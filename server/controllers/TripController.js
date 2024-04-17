@@ -88,12 +88,9 @@ class TripController {
    }
 
    async getTripsCount(req, res, next){
-//        const userId = JSON.parse(req.query.userId);
-    const userId = 1;
-        console.log(userId);
+    const { userId } = JSON.parse(req.cookies.user_info);
         try {
             const tripsCount = await this.tripRepository.getTripsCount(userId);
-            console.log("TRIPS COUNT IS: ", tripsCount);
             res.status(200).json(tripsCount)
         } catch (err){
            console.error(err);
