@@ -17,10 +17,10 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: 'http://localhost:5173',  
- // origin: 'http://localhost:4173',  //production build preview
+  origin: 'http://localhost:5173',
+  //origin: 'http://localhost:4173',  //production build preview
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true 
+  credentials: true
 }));
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/trip', tripRouter);
@@ -29,10 +29,10 @@ app.use('/api/v1/tag', tagRouter);
 app.use('/api/v1/file', fileRouter);
 app.use('/api/v1/follow', followerRouter);
 app.use('/api/v1/comment', commentRouter);
-    app.use('/api/v1/user/profile', profileRouter);
+app.use('/api/v1/user/profile', profileRouter);
 app.use(errorHandler);
 
 app.listen(3003, () => {
-    console.log('Listening on a port 3003');
+  console.log('Listening on a port 3003');
 });
 
