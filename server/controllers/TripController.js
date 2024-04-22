@@ -27,7 +27,7 @@ class TripController {
     }
   }
   async endCurrentTrip(req, res, next) {
-    const { userId } = req.body;
+    const { userId } = JSON.parse(req.cookies.user_info);
     try {
       const status = await this.tripRepository.endCurrentTrip(userId);
       if (status === 'closed') {
