@@ -23,7 +23,7 @@ app.use(cors({
   credentials: true
 }));
 app.use('/api/v1/auth', authRouter);
-app.use('/api/v1/trip', tripRouter);
+app.use('/api/v1/trips', tripRouter);
 app.use('/api/v1/record', recordRouter);
 app.use('/api/v1/tag', tagRouter);
 app.use('/api/v1/file', fileRouter);

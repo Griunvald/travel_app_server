@@ -8,7 +8,7 @@ const router = Router();
 const tripController = new TripController(TripRepository, TripService);
 
 router
-  .post('/create-trip', authGuard, tripController.createTrip.bind(tripController))
+  .post('/', authGuard, tripController.createTrip.bind(tripController))
   .patch('/close-trip', authGuard, tripController.endCurrentTrip.bind(tripController))
   .post('/get-trip', tripController.getCurrentTrip.bind(tripController))
   .get('/get-full-trip', tripController.getFullTrip.bind(tripController))
