@@ -7,7 +7,7 @@ import authGuard from '../middleware/authGuard.js';
 const router = Router();
 const recordController = new RecordController(RecordRepository, TagService);
 
-router.post('/create-record', authGuard, recordController.createRecord.bind(recordController))
+router.post('/', authGuard, recordController.createRecord.bind(recordController))
 router.patch('/edit-text-record', authGuard, recordController.editTextRecord.bind(recordController))
 router.delete('/delete-record', authGuard, recordController.deleteRecord.bind(recordController))
 
