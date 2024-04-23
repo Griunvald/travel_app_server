@@ -13,7 +13,7 @@ router
   .get('/current', authGuard, tripController.getCurrentTrip.bind(tripController))
   .get('/full/:id', tripController.getFullTrip.bind(tripController))
   .get('/preview', tripController.getAllTripsPreview.bind(tripController))
-  .get('/get-trips-count', authGuard, tripController.getTripsCount.bind(tripController))
+  .get('/count', authGuard, tripController.getTripsCount.bind(tripController))
   .get('/get-current-trip-records-with-tags',
     tripController.getCurrentTripRecordsWithTags.bind(tripController))
 
