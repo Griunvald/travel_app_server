@@ -77,7 +77,7 @@ class TripController {
   }
 
   async getFullTrip(req, res, next) {
-    const userId = JSON.parse(req.query.userId);
+    const userId = req.params.id;
     try {
       const fullTrip = await this.tripService.getFullTrip(userId);
       res.status(200).json(fullTrip);

@@ -11,7 +11,7 @@ router
   .post('/', authGuard, tripController.createTrip.bind(tripController))
   .patch('/close', authGuard, tripController.endCurrentTrip.bind(tripController))
   .get('/current', authGuard, tripController.getCurrentTrip.bind(tripController))
-  .get('/get-full-trip', tripController.getFullTrip.bind(tripController))
+  .get('/full/:id', tripController.getFullTrip.bind(tripController))
   .get('/get-all-trips-preview', tripController.getAllTripsPreview.bind(tripController))
   .get('/get-trips-count', authGuard, tripController.getTripsCount.bind(tripController))
   .get('/get-current-trip-records-with-tags',
