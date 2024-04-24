@@ -32,23 +32,32 @@ class RecordController {
       console.error(err);
       next(new AppError('Internal server error'));
     }
-
   }
 
-
   async deleteRecord(req, res, next) {
+    const recordId = req.params.id;
+    const { userId } = JSON.parse(req.cookies.user_info);
     const { type } = req.body;
-    const recordId = req.params.id
+
     try {
+      const recordDetails = await this.recordRepository.getRecordWithDetails(recordId);
+      console.log(recordDetails.userId);
+      console.log(userId);
+      if (!recordDetails) {
+        return res.status(404).json({ message: 'Record not found' });
+      }
+
+      if (userId !== recordDetails.userId) {
+        return res.status(403).json({ message: 'Not authorized to delete this record' });
+      }
+
       await this.recordRepository.deleteRecord(recordId, type);
       res.status(200).json({ message: 'Record was successfully deleted!' });
     } catch (err) {
       console.error(err);
       next(new AppError('Internal server error'));
     }
-
   }
-
 }
 
 export default RecordController;
