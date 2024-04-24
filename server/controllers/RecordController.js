@@ -41,8 +41,6 @@ class RecordController {
 
     try {
       const recordDetails = await this.recordRepository.getRecordWithDetails(recordId);
-      console.log(recordDetails.userId);
-      console.log(userId);
       if (!recordDetails) {
         return res.status(404).json({ message: 'Record not found' });
       }
