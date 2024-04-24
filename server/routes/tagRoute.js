@@ -11,6 +11,6 @@ const tagController = new TagController(TagRepository, RecordRepository, TagServ
 
 router
   .delete('/:recordId/:tagId', authGuard, tagController.deleteTag.bind(tagController))
-  .post('/add-tag', authGuard, tagController.addTag.bind(tagController))
+  .post('/:recordId/tags', authGuard, tagController.addTag.bind(tagController))
 
 export default router;

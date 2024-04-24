@@ -21,7 +21,8 @@ class TagController {
 
 
   async addTag(req, res, next) {
-    const { recordId, tags } = req.body;
+    const { recordId } = req.params;
+    const { tags } = req.body;
 
     try {
       const tagIds = await this.tagService.createTagsAndReturnIds(tags);
