@@ -23,7 +23,8 @@ class RecordController {
   }
 
   async editTextRecord(req, res, next) {
-    const { textRecordId, textValue } = req.body;
+    const textRecordId = req.params.id;
+    const { textValue } = req.body;
     try {
       await this.recordRepository.editTextRecord(textRecordId, textValue);
       res.status(201).json({ message: 'Record was successfully edited!' });

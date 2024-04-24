@@ -8,7 +8,7 @@ const router = Router();
 const recordController = new RecordController(RecordRepository, TagService);
 
 router.post('/', authGuard, recordController.createRecord.bind(recordController))
-router.patch('/edit-text-record', authGuard, recordController.editTextRecord.bind(recordController))
+router.patch('/text/:id', authGuard, recordController.editTextRecord.bind(recordController))
 router.delete('/delete-record', authGuard, recordController.deleteRecord.bind(recordController))
 
 export default router;
