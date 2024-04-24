@@ -37,7 +37,8 @@ class RecordController {
 
 
   async deleteRecord(req, res, next) {
-    const { recordId, type } = req.body;
+    const { type } = req.body;
+    const recordId = req.params.id
     try {
       await this.recordRepository.deleteRecord(recordId, type);
       res.status(200).json({ message: 'Record was successfully deleted!' });
