@@ -10,7 +10,7 @@ const router = Router();
 const tagController = new TagController(TagRepository, RecordRepository, TagService);
 
 router
-    .delete('/delete-tag', authGuard, tagController.deleteTag.bind(tagController))
-    .post('/add-tag', authGuard, tagController.addTag.bind(tagController))
+  .delete('/:recordId/:tagId', authGuard, tagController.deleteTag.bind(tagController))
+  .post('/add-tag', authGuard, tagController.addTag.bind(tagController))
 
 export default router;
