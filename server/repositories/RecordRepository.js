@@ -1,4 +1,5 @@
 import dbPool from '../db.js';
+import { toCamelCaseDeep } from '../utils/toCamelCase.js';
 
 class RecordRepository {
   async createRecord(userId, tripId, type, data) {
@@ -46,6 +47,30 @@ class RecordRepository {
     }
   }
 
+  async getRecordWithDetails(recordId) {
+    const client = await dbPool.connect();
+    try {
+      const query = `
+      SELECT 
+        r.*,
+        CASE WHEN r.type = 'text' THEN tr.text_value ELSE null END as text,
+        CASE WHEN r.type = 'url' THEN ur.url_value ELSE null END as url
+      FROM records r
+      LEFT JOIN text_records tr ON r.id = tr.id
+      LEFT JOIN url_records ur ON r.id = ur.id
+      WHERE r.id = $1;
+    `;
+      const result = await client.query(query, [recordId]);
+      return toCamelCaseDeep(result.rows[0]);
+    } catch (err) {
+      console.error("Error fetching record with details:", err);
+      throw err;
+    } finally {
+      client.release();
+    }
+  }
+
+
   async editTextRecord(textRecordId, textValue) {
     const client = await dbPool.connect();
     try {
@@ -63,7 +88,7 @@ class RecordRepository {
     try {
       await client.query('BEGIN');
 
-      const validTypes = ['text', 'url']; // Ensure that only valid types are used to prevent SQL injection
+      const validTypes = ['text', 'url'];
       if (!validTypes.includes(type)) {
         throw new Error('Invalid record type specified');
       }
