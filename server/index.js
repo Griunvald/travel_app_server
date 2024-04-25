@@ -26,7 +26,7 @@ app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/trips', tripRouter);
 app.use('/api/v1/records', recordRouter);
 app.use('/api/v1/tags', tagRouter);
-app.use('/api/v1/file', fileRouter);
+app.use('/api/v1/files', fileRouter);
 app.use('/api/v1/follow', followerRouter);
 app.use('/api/v1/comment', commentRouter);
 app.use('/api/v1/user/profile', profileRouter);
