@@ -31,7 +31,7 @@ class FollowerController {
   }
 
   async getFollowers(req, res, next) {
-    const { userId } = req.body;
+    const { userId } = JSON.parse(req.cookies.user_info);
     try {
       const followers = await this.followerRepository.getFollowers(userId);
       res.status(200).json({ followers });
