@@ -9,6 +9,6 @@ const commentController = new CommentController(CommentRepository);
 router.post('/:tripId', authGuard, commentController.createComment.bind(commentController))
 router.delete('/:commentId/:commentOwner', authGuard, commentController.deleteComment.bind(commentController))
 router.put('/:commentId/:commentOwner', commentController.editComment.bind(commentController))
-router.get('/get-comments', commentController.getComments.bind(commentController))
+router.get('/:tripId', commentController.getComments.bind(commentController))
 
 export default router;

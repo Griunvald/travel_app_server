@@ -36,7 +36,7 @@ class CommentController {
   }
 
   async getComments(req, res, next) {
-    const { tripId } = req.body;
+    const { tripId } = req.params;
     try {
       const comments = await this.commentRepository.getComments(tripId);
       res.status(200).json({ comments });
