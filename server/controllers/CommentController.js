@@ -47,7 +47,9 @@ class CommentController {
   }
 
   async editComment(req, res, next) {
-    const { commentId, commentOwner, userId, body } = req.body;
+    const { body } = req.body;
+    const { commentId, commentOwner } = req.params;
+    const { userId } = JSON.parse(req.cookies.user_info);
     try {
       const result = await this.commentRepository.editComment(commentId, commentOwner, userId, body);
 

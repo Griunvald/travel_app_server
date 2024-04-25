@@ -61,7 +61,7 @@ class CommentRepository {
       const updateQuery = `
                 UPDATE comments SET body = $1 WHERE id = $2;
                 `;
-      if (commentOwner !== userId) return null;
+      if (commentOwner != userId) return null;
       await client.query(updateQuery, [body, commentId]);
     } catch (err) {
       console.error(err);
