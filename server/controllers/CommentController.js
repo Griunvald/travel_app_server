@@ -19,7 +19,8 @@ class CommentController {
   }
 
   async deleteComment(req, res, next) {
-    const { commentId, commentOwner, userId } = req.body;
+    const { commentId, commentOwner } = req.params;
+    const { userId } = JSON.parse(req.cookies.user_info);
     try {
       const result = await this.commentRepository.deleteComment(commentId, commentOwner, userId);
 
