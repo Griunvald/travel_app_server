@@ -7,7 +7,7 @@ class FollowerController {
   }
 
   async followUser(req, res, next) {
-    const { leaderId } = req.body;
+    const leaderId = req.params.id
     const { userId } = JSON.parse(req.cookies.user_info);
     try {
       await this.followerRepository.followUser(leaderId, userId);

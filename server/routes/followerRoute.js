@@ -9,7 +9,7 @@ const router = Router();
 const followerController = new FollowerController(FollowerRepository, FollowService);
 
 router
-  .post('/', authGuard, followerController.followUser.bind(followerController))
+  .post('/:id', authGuard, followerController.followUser.bind(followerController))
   .delete('/:id', authGuard, followerController.unfollowUser.bind(followerController))
   .get('/followers', authGuard, followerController.getFollowers.bind(followerController))
   .get('/following', authGuard, followerController.getFollowing.bind(followerController))
