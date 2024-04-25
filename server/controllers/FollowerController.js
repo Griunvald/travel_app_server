@@ -19,7 +19,7 @@ class FollowerController {
   }
 
   async unfollowUser(req, res, next) {
-    const { leaderId } = req.body;
+    const leaderId = req.params.id
     const { userId } = JSON.parse(req.cookies.user_info);
     try {
       await this.followerRepository.unfollowUser(leaderId, userId);
