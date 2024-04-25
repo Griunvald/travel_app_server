@@ -28,7 +28,7 @@ app.use('/api/v1/records', recordRouter);
 app.use('/api/v1/tags', tagRouter);
 app.use('/api/v1/files', fileRouter);
 app.use('/api/v1/follows', followerRouter);
-app.use('/api/v1/comment', commentRouter);
+app.use('/api/v1/comments', commentRouter);
 app.use('/api/v1/user/profile', profileRouter);
 app.use(errorHandler);
 
