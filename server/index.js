@@ -29,7 +29,7 @@ app.use('/api/v1/tags', tagRouter);
 app.use('/api/v1/files', fileRouter);
 app.use('/api/v1/follows', followerRouter);
 app.use('/api/v1/comments', commentRouter);
-app.use('/api/v1/user/profile', profileRouter);
+app.use('/api/v1/users', profileRouter);
 app.use(errorHandler);
 
 app.listen(3003, () => {
