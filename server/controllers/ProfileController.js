@@ -7,7 +7,7 @@ class ProfileController {
 
   async updateProfile(req, res, next) {
     const { about, avatar, country, home_town, gender } = req.body;
-    const userId = JSON.parse(req.query.userId);
+    const { userId } = JSON.parse(req.cookies.user_info);
     const profileData = {
       about,
       avatar,
@@ -19,7 +19,7 @@ class ProfileController {
     try {
       const profile = await this.profileRepository.updateProfile(userId, profileData);
       console.log('Profile from controller: ', profile);
-      res.status(201).json(profile);
+      res.status(201).json("Profile was successfully updated!");
     } catch (err) {
       console.error(err);
       next(new AppError('Internal server error', 500));
