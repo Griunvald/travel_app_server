@@ -45,6 +45,7 @@ class TripController {
   async getCurrentTrip(req, res, next) {
     const { userId } = JSON.parse(req.cookies.user_info);
     try {
+      if (!userId) return;
       const currentTrip = await this.tripRepository.getCurrentTrip(userId);
       res.status(200).json(currentTrip)
     } catch (err) {
