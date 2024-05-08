@@ -5,19 +5,31 @@ class LikeRepository {
     this.pool = dbPool;
   }
 
-  async addLike() {
+  async addLike(type, itemId, userId) {
     const client = await this.pool.connect();
+    const tableMap = {
+      record: 'records_likes',
+      comment: 'comments_likes'
+    };
+    const tableName = tableMap[type];
+
+    if (!tableName) {
+      throw new Error('Invalid type provided');
+    }
+
     try {
-      console.log('Message from Like Repository');
+      const insertQuery = `
+            INSERT INTO ${tableName} (${type}_id, user_id) VALUES ($1, $2)
+        `;
+      await client.query(insertQuery, [itemId, userId]);
     } catch (err) {
-      console.error(err);
+      console.error('Error in addLike:', err);
       throw err;
     } finally {
       client.release();
     }
-
   }
-
 }
 
 export default new LikeRepository(dbPool);
+
