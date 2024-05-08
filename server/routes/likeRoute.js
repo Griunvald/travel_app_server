@@ -5,8 +5,8 @@ import LikeRepository from '../repositories/LikeRepository.js';
 const router = Router();
 const likeController = new LikeController(LikeRepository);
 
-router.post('/', likeController.addLike.bind(likeController));
-router.delete('/', likeController.addLike.bind(likeController));
+router.post('/:type/:id', likeController.addLike.bind(likeController));
+//router.delete('/:type/:id', likeController.removeLike.bind(likeController));
 
 export default router;
 
