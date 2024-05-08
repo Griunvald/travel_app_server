@@ -8,8 +8,8 @@ class LikeRepository {
   async addLike(type, itemId, userId) {
     const client = await this.pool.connect();
     const tableMap = {
-      record: 'records_likes',
-      comment: 'comments_likes'
+      record: 'record_likes',
+      comment: 'comment_likes'
     };
     const tableName = tableMap[type];
 
