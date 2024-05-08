@@ -6,8 +6,10 @@ class LikeController {
   }
 
   async addLike(req, res, next) {
+    const { type, id } = req.params;
+    const { userId } = JSON.parse(req.cookies.user_info);
     try {
-      await this.likeRepository.addLike();
+      await this.likeRepository.addLike(type, id, userId);
       res.status(201).json({ message: 'Like added!' });
     } catch (err) {
       console.error(err);
