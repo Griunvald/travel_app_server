@@ -17,6 +17,19 @@ class LikeController {
     }
   }
 
+
+  async removeLike(req, res, next) {
+    const { type, id } = req.params;
+    const { userId } = JSON.parse(req.cookies.user_info);
+    try {
+      await this.likeRepository.removeLike(type, id, userId);
+      res.status(200).json({ message: 'Like removed!' });
+    } catch (err) {
+      console.error(err);
+      next(new AppError('Internal server error'));
+    }
+  }
+
 }
 
 export default LikeController;

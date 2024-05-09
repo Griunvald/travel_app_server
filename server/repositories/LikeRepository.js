@@ -29,6 +29,35 @@ class LikeRepository {
       client.release();
     }
   }
+
+
+  async removeLike(type, itemId, userId) {
+    const client = await this.pool.connect();
+    try {
+      const tableName = type === 'record' ? 'record_likes' : 'comment_likes';
+
+      const verificationQuery = `
+            SELECT user_id FROM ${tableName} WHERE ${type}_id = $1 AND user_id = $2;
+        `;
+      const verificationResult = await client.query(verificationQuery, [itemId, userId]);
+
+      if (verificationResult.rowCount === 0) {
+        return { success: false, message: "You do not have permission to delete this like." };
+      }
+
+      const deleteQuery = `
+            DELETE FROM ${tableName} WHERE ${type}_id = $1 AND user_id = $2;
+        `;
+      await client.query(deleteQuery, [itemId, userId]);
+      return { success: true, message: "Like removed successfully." };
+    } catch (err) {
+      console.error('Error removing like:', err);
+      throw err;
+    } finally {
+      client.release();
+    }
+  }
+
 }
 
 export default new LikeRepository(dbPool);
