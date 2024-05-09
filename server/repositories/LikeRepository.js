@@ -58,6 +58,23 @@ class LikeRepository {
     }
   }
 
+
+  async getLikesCount(type, userId) {
+    const client = await this.pool.connect();
+    try {
+      const tableName = type === 'record' ? 'record_likes' : 'comment_likes';
+      const selectQuery = `SELECT COUNT(*) AS likes_count FROM ${tableName} WHERE user_id = $1`;
+      const result = await client.query(selectQuery, [userId]);
+      return result.rows[0].likes_count;
+    } catch (err) {
+      console.error('Error getting likes count:', err);
+      throw err;
+    } finally {
+      client.release();
+    }
+  }
+
+
 }
 
 export default new LikeRepository(dbPool);

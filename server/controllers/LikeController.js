@@ -30,6 +30,22 @@ class LikeController {
     }
   }
 
+
+
+  async getLikesCount(req, res, next) {
+    const { type } = req.params;
+    const { userId } = JSON.parse(req.cookies.user_info);
+    try {
+      const likesCount = await this.likeRepository.getLikesCount(type, userId);
+      res.status(200).json({ message: `Like count for ${type} is ${likesCount}` });
+    } catch (err) {
+      console.error(err);
+      next(new AppError('Internal server error'));
+    }
+  }
+
+
+
 }
 
 export default LikeController;
