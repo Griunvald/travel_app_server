@@ -48,7 +48,6 @@ class LikeController {
 
   async getItemLikesCountByType(req, res, next) {
     const { type, id } = req.params;
-    console.log(type, id);
     const { userId } = JSON.parse(req.cookies.user_info);
     try {
       const likesCount = await this.likeRepository.getItemLikesCountByType(type, id);
