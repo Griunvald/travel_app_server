@@ -59,7 +59,7 @@ class LikeRepository {
   }
 
 
-  async getLikesCount(type, userId) {
+  async getUserLikesCountByType(type, userId) {
     const client = await this.pool.connect();
     try {
       const tableName = type === 'record' ? 'record_likes' : 'comment_likes';

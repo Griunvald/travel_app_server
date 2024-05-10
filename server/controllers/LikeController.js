@@ -32,11 +32,11 @@ class LikeController {
 
 
 
-  async getLikesCount(req, res, next) {
+  async getUserLikesCountByType(req, res, next) {
     const { type } = req.params;
     const { userId } = JSON.parse(req.cookies.user_info);
     try {
-      const likesCount = await this.likeRepository.getLikesCount(type, userId);
+      const likesCount = await this.likeRepository.getUserLikesCountByType(type, userId);
       res.status(200).json({ message: `Like count for ${type} is ${likesCount}` });
     } catch (err) {
       console.error(err);
