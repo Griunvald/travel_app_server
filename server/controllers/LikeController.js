@@ -37,7 +37,7 @@ class LikeController {
     const { userId } = JSON.parse(req.cookies.user_info);
     try {
       const likesCount = await this.likeRepository.getUserLikesCountByType(type, userId);
-      res.status(200).json({ message: `Like count for ${type} is ${likesCount}` });
+      res.status(200).json({ message: `User's Like count for ${type} is ${likesCount}` });
     } catch (err) {
       console.error(err);
       next(new AppError('Internal server error'));
