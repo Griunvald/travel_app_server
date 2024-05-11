@@ -9,7 +9,7 @@ const likeController = new LikeController(LikeRepository);
 router.post('/:type/:id', authGuard, likeController.addLike.bind(likeController));
 router.delete('/:type/:id', authGuard, likeController.removeLike.bind(likeController));
 router.get('/user/:type/:id', authGuard, likeController.getUserLikesCountByType.bind(likeController));
-router.get('/item/:type/:id', authGuard, likeController.getItemLikesCountByType.bind(likeController));
+router.get('/item/:type', authGuard, likeController.getItemLikesCountListByType.bind(likeController));
 
 
 
