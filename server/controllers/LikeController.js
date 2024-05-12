@@ -50,7 +50,7 @@ class LikeController {
     const { type } = req.params;
     const { userId } = JSON.parse(req.cookies.user_info);
     try {
-      const likesCount = await this.likeRepository.getItemLikesCountListByType(type);
+      const likesCount = await this.likeRepository.getItemLikesCountListByType(type, userId);
       res.status(200).json(likesCount);
     } catch (err) {
       console.error(err);

@@ -75,13 +75,17 @@ class LikeRepository {
   }
 
 
-  async getItemLikesCountListByType(type) {
+  async getItemLikesCountListByType(type, userId) {
     const client = await this.pool.connect();
     try {
       const tableName = type === 'record' ? 'record_likes' : 'comment_likes';
-      const selectQuery = `SELECT ${type}_id AS type_id, CAST(COUNT(*) AS INTEGER)AS item_likes_count FROM ${tableName}
-       GROUP BY ${type}_id`;
-      const result = await client.query(selectQuery);
+      const selectQuery = `
+      SELECT ${type}_id AS type_id, 
+      CAST(COUNT(*) AS INTEGER) AS item_likes_count,
+      BOOL_OR(user_id = $1) AS liked_by_current_user  
+      FROM ${tableName}
+      GROUP BY ${type}_id`;
+      const result = await client.query(selectQuery, [userId]);
       return result.rows;
 
     } catch (err) {
