@@ -1,4 +1,5 @@
 import dbPool from '../db.js';
+import { toCamelCaseDeep } from '../utils/toCamelCase.js';
 
 class LikeRepository {
   constructor(dbPool) {
@@ -86,7 +87,7 @@ class LikeRepository {
       FROM ${tableName}
       GROUP BY ${type}_id`;
       const result = await client.query(selectQuery, [userId]);
-      return result.rows;
+      return toCamelCaseDeep(result.rows);
 
     } catch (err) {
       console.error('Error getting likes count:', err);
