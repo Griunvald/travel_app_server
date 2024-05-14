@@ -43,8 +43,9 @@ class CommentRepository {
     try {
       const selectQuery = `
       SELECT 
-      c.id, c.trip_id, c.user_id, c.created_at, c.edited_at, c.body, u.username
+      c.id, c.trip_id, c.user_id, c.created_at, c.edited_at, c.body, u.username, p.avatar
       FROM comments c JOIN users u ON c.user_id = u.id
+      LEFT JOIN profiles p ON c.user_id = p.user_id
       WHERE c.trip_id = $1 ORDER BY c.created_at DESC;
       `;
       const result = await client.query(selectQuery, [tripId]);
