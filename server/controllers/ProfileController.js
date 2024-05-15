@@ -17,8 +17,7 @@ class ProfileController {
     };
 
     try {
-      const profile = await this.profileRepository.updateProfile(userId, profileData);
-      console.log('Profile from controller: ', profile);
+      await this.profileRepository.updateProfile(userId, profileData);
       res.status(201).json("Profile was successfully updated!");
     } catch (err) {
       console.error(err);
