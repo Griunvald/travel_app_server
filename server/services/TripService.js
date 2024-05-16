@@ -10,7 +10,6 @@ class TripService {
       const tripDetails = await this.tripRepository.getCurrentTrip(userId);
 
       if (!tripDetails) {
-        // Handle the case where no current trip is found later
         return null;
       }
 
