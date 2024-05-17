@@ -95,12 +95,11 @@ class AuthRepository {
       if (user && await this.verifyPassword(user, password)) {
         const token = await this.generateToken(user.rows[0].id);
         const profile = await ProfileRepository.getProfile(user.rows[0].id);
-        const userInfo = JSON.stringify({
+        const userInfo = {
           username: user.rows[0].username,
-          userId: user.rows[0].id,
-          avatar: profile.avatar || ''
-        });
-        return { token, userInfo };
+          userId: user.rows[0].id
+        };
+        return { token, userInfo, profile };
       } else {
         return null;
       }
