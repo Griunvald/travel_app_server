@@ -8,22 +8,17 @@ class ProfileController {
   async updateProfile(req, res, next) {
     const { about, avatar, country, home_town, gender } = req.body;
     const { userId } = JSON.parse(req.cookies.user_info);
-    const profileData = {
-      about,
-      avatar,
-      country,
-      home_town,
-      gender
-    };
+    const profileData = { about, avatar, country, home_town, gender };
 
     try {
       await this.profileRepository.updateProfile(userId, profileData);
-      res.status(201).json("Profile was successfully updated!");
+      res.status(200).json("Profile was successfully updated!");
     } catch (err) {
       console.error(err);
       next(new AppError('Internal server error', 500));
     }
   }
+
 
 
   async getProfile(req, res, next) {
