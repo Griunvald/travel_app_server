@@ -6,7 +6,7 @@ const router = Router();
 
 const profileController = new ProfileController(ProfileRepository);
 router
-  .put('/profile', profileController.updateProfile.bind(profileController))
+  .patch('/profile', profileController.updateProfile.bind(profileController))
   .get('/profile', profileController.getProfile.bind(profileController))
   .get('/get-profiles', profileController.getProfiles.bind(profileController))
 
