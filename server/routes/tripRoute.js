@@ -15,5 +15,7 @@ router
   .get('/preview', tripController.getAllTripsPreview.bind(tripController))
   .get('/count', authGuard, tripController.getTripsCount.bind(tripController))
   .get('/current/records/tags', tripController.getCurrentTripRecordsWithTags.bind(tripController))
+  .get('/status', tripController.checkCurrentTripStatus.bind(tripController))
+
 
 export default router;
