@@ -158,6 +158,28 @@ class TripRepository {
     }
   }
 
+  async getTripsList(userId) {
+    const client = await this.pool.connect();
+    try {
+      const searchQuery = `SELECT t.id, t.user_id, u.username, t.title, t.description, t.url, t.created_at, t.status 
+            FROM trips AS t JOIN usernames AS u ON t.user_id = u.user_id WHERE t.user_id = $1 
+            ORDER BY t.created_at DESC`;
+      const searchResult = await client.query(searchQuery, [userId]);
+      const trips = [];
+      for (let row of searchResult.rows) {
+        const { id, user_id: userId, username, title, description, url, created_at: createdAt, status } = row;
+        trips.push({ id, userId, username, title, description, url, createdAt, status });
+      }
+
+      return trips;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    } finally {
+      client.release();
+    }
+  }
+
 }
 
 export default new TripRepository(dbPool);

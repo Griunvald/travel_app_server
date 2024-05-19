@@ -59,6 +59,17 @@ class TripController {
 
   }
 
+  async getTripsList(req, res, next) {
+    const { userId } = JSON.parse(req.cookies.user_info);
+    try {
+      if (!userId) return;
+      const tripsListStats = await this.tripRepository.getTripsList(userId);
+      res.status(200).json(tripsListStats)
+    } catch (err) {
+      console.error(err);
+      next(new AppError('Internal server error', 500));
+    }
+  }
 
 
 
