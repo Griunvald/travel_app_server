@@ -26,7 +26,7 @@ class AuthController {
     const { input, password } = req.body;
     try {
       const { token, userInfo, profile } = await this.authRepository.login(input, password)
-      if (!token) return res.status(401).json({ message: 'Account not found!' });
+      if (!token) return res.status(401).json({ message: 'Invalid username/email or password' });
       res.cookie('access_token', token, { httpOnly: true });
       res.cookie('user_info', JSON.stringify(userInfo));
       res.status(200).json({ userInfo, profile });
