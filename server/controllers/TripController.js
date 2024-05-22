@@ -78,7 +78,6 @@ class TripController {
     try {
       if (!userId) return;
       const currentTrip = await this.tripRepository.getCurrentTrip(userId);
-      console.log(currentTrip);
       if (currentTrip.status === 'closed') return;
       res.status(200).json(currentTrip)
     } catch (err) {
