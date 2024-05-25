@@ -34,6 +34,19 @@ class RecordController {
     }
   }
 
+
+  async editUrlRecord(req, res, next) {
+    const urlRecordId = req.params.id;
+    const { urlValue } = req.body;
+    try {
+      await this.recordRepository.editUrlRecord(urlRecordId, urlValue);
+      res.status(201).json({ message: 'Record was successfully edited!' });
+    } catch (err) {
+      console.error(err);
+      next(new AppError('Internal server error'));
+    }
+  }
+
   async deleteRecord(req, res, next) {
     const recordId = req.params.id;
     const { userId } = JSON.parse(req.cookies.user_info);

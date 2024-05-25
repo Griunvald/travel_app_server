@@ -83,6 +83,19 @@ class RecordRepository {
     }
   }
 
+
+  async editUrlRecord(urlRecordId, urlValue) {
+    const client = await dbPool.connect();
+    try {
+      const updateQuery = `UPDATE url_records SET url_value = $1 WHERE id = $2`;
+      await client.query(updateQuery, [urlValue, urlRecordId]);
+    } catch (err) {
+      throw err;
+    } finally {
+      client.release();
+    }
+  }
+
   async deleteRecord(recordId, type) {
     const client = await dbPool.connect();
     try {
