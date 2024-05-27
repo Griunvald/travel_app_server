@@ -74,7 +74,7 @@ class TripRepository {
     }
   }
 
-  async getAllTripsPreview() {
+  async getAllTripsPreview(limit, offset) {
 
     const client = await this.pool.connect();
     try {
@@ -82,8 +82,8 @@ class TripRepository {
             trips.description, trips.url, trips.created_at, profiles.avatar FROM trips
             JOIN usernames ON trips.user_id = usernames.user_id
             LEFT JOIN profiles ON trips.user_id = profiles.user_id 
-            ORDER BY created_at DESC`;
-      const searchResult = await client.query(searchQuery);
+            ORDER BY created_at DESC LIMIT $1 OFFSET $2`;
+      const searchResult = await client.query(searchQuery, [limit, offset]);
       const results = [];
 
       for (const row of searchResult.rows) {

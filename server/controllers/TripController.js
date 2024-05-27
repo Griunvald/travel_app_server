@@ -87,8 +87,9 @@ class TripController {
   }
 
   async getAllTripsPreview(req, res, next) {
+    const { limit, offset } = req.params;
     try {
-      const allTrips = await this.tripRepository.getAllTripsPreview();
+      const allTrips = await this.tripRepository.getAllTripsPreview(limit, offset);
       res.status(200).json(allTrips);
     } catch (err) {
       console.error(err);

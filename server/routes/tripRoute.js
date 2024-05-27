@@ -12,7 +12,7 @@ router
   .patch('/close', authGuard, tripController.endCurrentTrip.bind(tripController))
   .get('/current', authGuard, tripController.getCurrentTrip.bind(tripController))
   .get('/full/:id', tripController.getFullTrip.bind(tripController))
-  .get('/preview', tripController.getAllTripsPreview.bind(tripController))
+  .get('/preview/:limit/:offset', tripController.getAllTripsPreview.bind(tripController))
   .get('/count', authGuard, tripController.getTripsCount.bind(tripController))
   .get('/current/records/tags', tripController.getCurrentTripRecordsWithTags.bind(tripController))
   .get('/status', tripController.checkCurrentTripStatus.bind(tripController))
