@@ -61,7 +61,7 @@ class ProfileRepository {
     const client = await this.pool.connect();
 
     const query = `
-        SELECT about, avatar, country, home_town, gender 
+        SELECT user_id, about, avatar, country, home_town, gender 
         FROM profiles 
         ORDER BY user_id 
         LIMIT $1 OFFSET $2`;
