@@ -8,7 +8,7 @@ const profileController = new ProfileController(ProfileRepository);
 router
   .patch('/profile', profileController.updateProfile.bind(profileController))
   .get('/profile', profileController.getProfile.bind(profileController))
-  .get('/get-profiles', profileController.getProfiles.bind(profileController))
+  .get('/profiles/:limit/:offset', profileController.getProfiles.bind(profileController))
 
 export default router;
 
