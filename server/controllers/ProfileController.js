@@ -34,8 +34,8 @@ class ProfileController {
 
 
   async getProfiles(req, res, next) {
-    const limit = JSON.parse(req.query.limit);
-    const offset = JSON.parse(req.query.offset);
+    const limit = JSON.parse(req.params.limit);
+    const offset = JSON.parse(req.params.offset);
 
     try {
       const profiles = await this.profileRepository.getProfiles(limit, offset);
