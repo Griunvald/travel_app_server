@@ -79,7 +79,7 @@ class TripRepository {
     const client = await this.pool.connect();
     try {
       const searchQuery = `SELECT trips.id, trips.user_id, usernames.username, trips.title,
-            trips.description, trips.url, trips.created_at, profiles.avatar FROM trips
+            trips.description, trips.url, trips.created_at, profiles.avatar, profiles.about FROM trips
             JOIN usernames ON trips.user_id = usernames.user_id
             LEFT JOIN profiles ON trips.user_id = profiles.user_id 
             ORDER BY created_at DESC LIMIT $1 OFFSET $2`;
@@ -87,8 +87,8 @@ class TripRepository {
       const results = [];
 
       for (const row of searchResult.rows) {
-        const { id, user_id: userId, username, title, description, url, created_at: createdAt, avatar } = row;
-        results.push({ id, userId, username, title, description, url, createdAt, avatar });
+        const { id, user_id: userId, username, title, description, url, created_at: createdAt, avatar, about } = row;
+        results.push({ id, userId, username, title, description, url, createdAt, avatar, about });
       }
 
       return results;
