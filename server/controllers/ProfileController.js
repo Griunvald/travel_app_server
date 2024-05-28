@@ -33,18 +33,6 @@ class ProfileController {
   }
 
 
-  async getProfiles(req, res, next) {
-    const limit = JSON.parse(req.params.limit);
-    const offset = JSON.parse(req.params.offset);
-
-    try {
-      const profiles = await this.profileRepository.getProfiles(limit, offset);
-      res.status(201).json(profiles);
-    } catch (err) {
-      console.error(err);
-      next(new AppError('Internal server error', 500));
-    }
-  }
 }
 
 
