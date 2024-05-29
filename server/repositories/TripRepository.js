@@ -55,24 +55,33 @@ class TripRepository {
     }
   }
 
-  async getCurrentTrip(userId) {
-    const client = await this.pool.connect();
-    try {
-      const searchQuery = `SELECT t.id, t.user_id, u.username, t.title, t.description, t.url, t.created_at, t.status 
-            FROM trips AS t JOIN usernames AS u ON t.user_id = u.user_id WHERE t.user_id = $1 
-            ORDER BY created_at DESC LIMIT 1`;
-      const searchResult = await client.query(searchQuery, [userId]);
-      if (searchResult.rows.length > 0) {
-        const { id, title, username, description, url, created_at: createdAt, status } = searchResult.rows[0];
-        return { id, username, title, description, url, createdAt, status };
-      }
-    } catch (err) {
-      console.error(err);
-      throw err;
-    } finally {
-      client.release();
+async getCurrentTrip(userId) {
+  const client = await this.pool.connect();
+  try {
+    const searchQuery = `
+      SELECT 
+        t.id, t.user_id, u.username, 
+        t.title, t.description, t.url, 
+        t.created_at, t.status, p.avatar, p.about
+      FROM trips AS t 
+      JOIN usernames AS u ON t.user_id = u.user_id 
+      JOIN profiles AS p ON t.user_id = p.user_id
+      WHERE t.user_id = $1 
+      ORDER BY t.created_at DESC 
+      LIMIT 1
+    `;
+    const searchResult = await client.query(searchQuery, [userId]);
+    if (searchResult.rows.length > 0) {
+      const { id, title, username, description, url, created_at: createdAt, status, avatar, about } = searchResult.rows[0];
+      return { id, username, title, description, url, createdAt, status, avatar, about };
     }
+  } catch (err) {
+    console.error(err);
+    throw err;
+  } finally {
+    client.release();
   }
+}
 
   async getAllTripsPreview(limit, offset) {
 
