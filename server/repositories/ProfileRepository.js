@@ -7,16 +7,24 @@ class ProfileRepository {
   }
 
 
-  async updateProfile(userId, profileData) {
+async updateProfile(userId, profileData) {
     const client = await this.pool.connect();
     try {
+      const checkQuery = 'SELECT 1 FROM profiles WHERE user_id = $1';
+      const checkResult = await client.query(checkQuery, [userId]);
+      const profileExists = checkResult.rows.length > 0;
+
+      if (!profileExists) {
+        const insertQuery = 'INSERT INTO profiles (user_id) VALUES ($1)';
+        await client.query(insertQuery, [userId]);
+      }
+
       const updateFields = [];
       const updateValues = [userId];
-
       let paramIndex = 2;
       for (const [key, value] of Object.entries(profileData)) {
         if (value !== undefined) {
-          updateFields.push(`${key} = $${paramIndex}::text`);
+          updateFields.push(`${key} = $${paramIndex}`);
           updateValues.push(value);
           paramIndex++;
         }
@@ -26,21 +34,21 @@ class ProfileRepository {
         throw new Error('No fields to update');
       }
 
-      const query = `
-      UPDATE profiles
-      SET ${updateFields.join(', ')}
-      WHERE user_id = $1
-    `;
+      const updateQuery = `
+        UPDATE profiles
+        SET ${updateFields.join(', ')}
+        WHERE user_id = $1
+      `;
 
-      return await client.query(query, updateValues);
+      const result = await client.query(updateQuery, updateValues);
+      return result;
     } catch (error) {
-      console.error('Error in updateProfile:', error);
+      console.error('Error in upsertProfile:', error);
       throw error;
     } finally {
       client.release();
     }
   }
-
 
 
   async getProfile(userId) {
