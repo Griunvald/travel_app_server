@@ -76,26 +76,40 @@ class LikeRepository {
   }
 
 
-  async getItemLikesCountListByType(type, userId) {
-    const client = await this.pool.connect();
-    try {
-      const tableName = type === 'record' ? 'record_likes' : 'comment_likes';
-      const selectQuery = `
+async getItemLikesCountListByType(type, userId) {
+  const client = await this.pool.connect();
+  try {
+    const tableName = type === 'record' ? 'record_likes' : 'comment_likes';
+    let selectQuery;
+    let queryParams;
+
+    if (userId) {
+      selectQuery = `
       SELECT ${type}_id AS type_id, 
       CAST(COUNT(*) AS INTEGER) AS item_likes_count,
       BOOL_OR(user_id = $1) AS liked_by_current_user  
       FROM ${tableName}
       GROUP BY ${type}_id`;
-      const result = await client.query(selectQuery, [userId]);
-      return toCamelCaseDeep(result.rows);
-
-    } catch (err) {
-      console.error('Error getting likes count:', err);
-      throw err;
-    } finally {
-      client.release();
+      queryParams = [userId];
+    } else {
+      selectQuery = `
+      SELECT ${type}_id AS type_id, 
+      CAST(COUNT(*) AS INTEGER) AS item_likes_count 
+      FROM ${tableName}
+      GROUP BY ${type}_id`;
+      queryParams = [];
     }
+
+    const result = await client.query(selectQuery, queryParams);
+    return toCamelCaseDeep(result.rows);
+
+  } catch (err) {
+    console.error('Error getting likes count:', err);
+    throw err;
+  } finally {
+    client.release();
   }
+}
 
 
 }

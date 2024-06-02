@@ -46,17 +46,19 @@ class LikeController {
 
 
 
-  async getItemLikesCountListByType(req, res, next) {
-    const { type } = req.params;
-    const { userId } = JSON.parse(req.cookies.user_info);
-    try {
-      const likesCount = await this.likeRepository.getItemLikesCountListByType(type, userId);
-      res.status(200).json(likesCount);
-    } catch (err) {
-      console.error(err);
-      next(new AppError('Internal server error'));
-    }
+async getItemLikesCountListByType(req, res, next) {
+  const { type } = req.params;
+  const userInfo = req.cookies.user_info ? JSON.parse(req.cookies.user_info) : null;
+  const userId = userInfo ? userInfo.userId : null;
+
+  try {
+    const likesCount = await this.likeRepository.getItemLikesCountListByType(type, userId);
+    res.status(200).json(likesCount);
+  } catch (err) {
+    console.error(err);
+    next(new AppError('Internal server error'));
   }
+}
 
 
 
