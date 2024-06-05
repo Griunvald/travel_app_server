@@ -2,6 +2,7 @@ import express from 'express';
 import 'dotenv/config';
 import db from './db.js';
 import cookieParser from 'cookie-parser';
+import path from 'path';
 import authRouter from './routes/authRoute.js';
 import tripRouter from './routes/tripRoute.js';
 import recordRouter from './routes/recordRoute.js';
@@ -13,6 +14,7 @@ import profileRouter from './routes/profileRoute.js';
 import likeRouter from './routes/likeRoute.js';
 import errorHandler from './middleware/error/errorHandler.js';
 import cors from 'cors';
+
 const app = express();
 
 app.use(express.json());
@@ -22,6 +24,7 @@ app.use(cors({
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true
 }));
+
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/trips', tripRouter);
 app.use('/api/v1/records', recordRouter);
@@ -33,8 +36,14 @@ app.use('/api/v1/users', profileRouter);
 app.use('/api/v1/likes', likeRouter);
 app.use(errorHandler);
 
-app.listen(3003, () => {
-  console.log('Listening on a port 3003');
+app.use(express.static(path.join(__dirname, 'build')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
+const server = app.listen(3003, () => {
+  console.log('Listening on port 3003');
 });
 
 const gracefulShutdown = (signal) => {
@@ -50,8 +59,9 @@ const gracefulShutdown = (signal) => {
   setTimeout(() => {
     console.error('Could not close connections in time, forcefully shutting down.');
     process.exit(1);
-  }, 10000); 
+  }, 10000);
 };
 
 process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
