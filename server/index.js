@@ -19,7 +19,6 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
   origin: 'http://localhost:5173',
-  //origin: 'http://localhost:4173',  //production build preview
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true
 }));
@@ -38,3 +37,21 @@ app.listen(3003, () => {
   console.log('Listening on a port 3003');
 });
 
+const gracefulShutdown = (signal) => {
+  console.log(`Received ${signal}. Shutting down gracefully...`);
+  server.close(() => {
+    console.log('Closed out remaining connections.');
+    db.close(() => {
+      console.log('Database connection closed.');
+      process.exit(0);
+    });
+  });
+
+  setTimeout(() => {
+    console.error('Could not close connections in time, forcefully shutting down.');
+    process.exit(1);
+  }, 10000); 
+};
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
