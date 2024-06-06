@@ -16,13 +16,13 @@ import likeRouter from './routes/likeRoute.js';
 import errorHandler from './middleware/error/errorHandler.js';
 import cors from 'cors';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const env = process.env.NODE_ENV || 'development';
 dotenv.config({ path: `.env.${env}` });
 
 const app = express();
-
-const __dirname = path.dirname(__filename);
-const __filename = fileURLToPath(import.meta.url);
 
 app.use(express.json());
 app.use(cookieParser());
