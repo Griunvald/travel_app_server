@@ -1,5 +1,5 @@
 import express from 'express';
-import dotenv from 'dotenv';
+import 'dotenv/config';
 import db from './db.js';
 import cookieParser from 'cookie-parser';
 import path from 'path';
@@ -20,10 +20,14 @@ import cors from 'cors';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const env = process.env.NODE_ENV || 'development';
-dotenv.config({ path: `.env.${env}` });
-
 const app = express();
+
+console.log('Environment variables loaded:');
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('DB_HOST:', process.env.PG_HOST);
+console.log('DB_USER:', process.env.PG_USER);
+console.log('DB_DATABASE:', process.env.PG_DATABASE);
+console.log('DB_PORT:', process.env.PG_PORT);
 
 app.use(express.json());
 app.use(cookieParser());
@@ -64,11 +68,20 @@ const server = app.listen(process.env.PORT || 3003, () => {
   console.log(`Listening on port ${process.env.PORT || 3003}`);
 });
 
+// Graceful shutdown
 const gracefulShutdown = (signal) => {
   console.log(`Received ${signal}. Shutting down gracefully...`);
-  server.close(() => {
+  server.close((err) => {
+    if (err) {
+      console.error('Error shutting down the server:', err);
+      process.exit(1);
+    }
     console.log('Closed out remaining connections.');
-    db.close(() => {
+    db.end((dbErr) => {
+      if (dbErr) {
+        console.error('Error closing the database connection:', dbErr);
+        process.exit(1);
+      }
       console.log('Database connection closed.');
       process.exit(0);
     });
