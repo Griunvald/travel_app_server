@@ -4,6 +4,7 @@ import db from './db.js';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 import authRouter from './routes/authRoute.js';
 import tripRouter from './routes/tripRoute.js';
 import recordRouter from './routes/recordRoute.js';
@@ -43,14 +44,24 @@ app.use('/api/v1/users', profileRouter);
 app.use('/api/v1/likes', likeRouter);
 app.use(errorHandler);
 
-app.use(express.static(path.join(__dirname, 'build')));
+const buildPath = path.join(__dirname, 'build');
+if (fs.existsSync(buildPath)) {
+  console.log('Serving static files from the build directory.');
+  app.use(express.static(buildPath));
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(buildPath, 'index.html'));
+  });
+} else {
+  console.log('Build directory not found. Assuming development environment.');
 
-const server = app.listen(process.env.PORT, () => {
-  console.log(`Listening on port ${process.env.PORT}`);
+  app.get('*', (req, res) => {
+    res.send('Development mode. Build folder not found.');
+  });
+}
+
+const server = app.listen(process.env.PORT || 3003, () => {
+  console.log(`Listening on port ${process.env.PORT || 3003}`);
 });
 
 const gracefulShutdown = (signal) => {
