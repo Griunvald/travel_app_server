@@ -3,7 +3,6 @@ notes
 
 .DS_Store
 .git
-server/.env.development
-server/.env.production
+server/.env
 
 
