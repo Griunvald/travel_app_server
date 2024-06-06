@@ -1,5 +1,5 @@
 import express from 'express';
-import 'dotenv/config';
+import dotenv from 'dotenv';
 import db from './db.js';
 import cookieParser from 'cookie-parser';
 import path from 'path';
@@ -16,15 +16,18 @@ import likeRouter from './routes/likeRoute.js';
 import errorHandler from './middleware/error/errorHandler.js';
 import cors from 'cors';
 
+const env = process.env.NODE_ENV || 'development';
+dotenv.config({ path: `.env.${env}` });
+
 const app = express();
 
-const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const __filename = fileURLToPath(import.meta.url);
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: process.env.CORS_ORIGIN,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true
 }));
@@ -46,8 +49,8 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-const server = app.listen(3003, () => {
-  console.log('Listening on port 3003');
+const server = app.listen(process.env.PORT, () => {
+  console.log(`Listening on port ${process.env.PORT}`);
 });
 
 const gracefulShutdown = (signal) => {
