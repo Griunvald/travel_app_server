@@ -3,6 +3,7 @@ import 'dotenv/config';
 import db from './db.js';
 import cookieParser from 'cookie-parser';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import authRouter from './routes/authRoute.js';
 import tripRouter from './routes/tripRoute.js';
 import recordRouter from './routes/recordRoute.js';
@@ -16,6 +17,9 @@ import errorHandler from './middleware/error/errorHandler.js';
 import cors from 'cors';
 
 const app = express();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(express.json());
 app.use(cookieParser());
