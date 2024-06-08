@@ -1,6 +1,9 @@
 import pg from 'pg';
+import { readFileSync } from 'fs';
 
 const { Pool } = pg;
+
+const caCert = readFileSync('./us-east-1-bundle.pem').toString();
 
 const pool = new Pool({
     user: process.env.DB_USER,
@@ -8,6 +11,11 @@ const pool = new Pool({
     database: process.env.DB_DATABASE,
     password: process.env.DB_PASSWORD,
     port: process.env.DB_PORT,
+    ssl: {
+      require: true,
+      rejectUnauthorized: true,
+      ca: caCert,
+    },
 });
 
 (async () => {
@@ -20,7 +28,6 @@ const pool = new Pool({
     } finally {
         client.release();
     }
-    
 })();
 
 export default pool;
