@@ -22,13 +22,6 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-console.log('Environment variables loaded:');
-console.log('NODE_ENV:', process.env.NODE_ENV);
-console.log('DB_HOST:', process.env.PG_HOST);
-console.log('DB_USER:', process.env.PG_USER);
-console.log('DB_DATABASE:', process.env.PG_DATABASE);
-console.log('DB_PORT:', process.env.PG_PORT);
-
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
