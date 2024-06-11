@@ -46,14 +46,14 @@ class AuthRepository {
       const usernameInsertQuery = `INSERT INTO usernames (user_id, username) VALUES ($1, $2)`;
       const usernameInsertResult = await client.query(usernameInsertQuery, [userId, username]);
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
       const token = await this.generateToken(userId);
 
       return { token, userInfo };
 
     } catch (err) {
-      await client.query('ROLLBACK')
+      await client.query('ROLLBACK');
       console.error(err);
       throw err;
     } finally {
@@ -80,7 +80,7 @@ class AuthRepository {
       return false;
     }
     const hashedPassword = user.rows[0].password;
-    const match = await bcrypt.compare(password, hashedPassword)
+    const match = await bcrypt.compare(password, hashedPassword);
     return match;
   }
 
@@ -92,7 +92,7 @@ class AuthRepository {
       } else {
         user = await this.findUserByEmailOrUsername(input, 'username');
       }
-      if (user && await this.verifyPassword(user, password)) {
+      if (user && user.rows.length > 0 && await this.verifyPassword(user, password)) {
         const token = await this.generateToken(user.rows[0].id);
         const profile = await ProfileRepository.getProfile(user.rows[0].id);
         const userInfo = {
@@ -101,7 +101,7 @@ class AuthRepository {
         };
         return { token, userInfo, profile };
       } else {
-        return null;
+        return { error: 'Invalid username or password' };
       }
     } catch (err) {
       throw err;
@@ -112,10 +112,7 @@ class AuthRepository {
     const decodedToken = await verifyJwt(token);
     const userId = decodedToken.userId;
     return userId;
-
   }
-
-
 };
 
 export default new AuthRepository(dbPool);
