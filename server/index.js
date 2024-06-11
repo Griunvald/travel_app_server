@@ -62,8 +62,17 @@ const server = app.listen(process.env.PORT || 3003, () => {
 });
 
 // Graceful shutdown
+let isShuttingDown = false;
+
 const gracefulShutdown = (signal) => {
+  if (isShuttingDown) {
+    console.log(`Already shutting down. Ignoring ${signal} signal.`);
+    return;
+  }
+
+  isShuttingDown = true;
   console.log(`Received ${signal}. Shutting down gracefully...`);
+
   server.close((err) => {
     if (err) {
       console.error('Error shutting down the server:', err);
@@ -83,7 +92,7 @@ const gracefulShutdown = (signal) => {
   setTimeout(() => {
     console.error('Could not close connections in time, forcefully shutting down.');
     process.exit(1);
-  }, 10000);
+  }, 10000).unref();
 };
 
 process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
