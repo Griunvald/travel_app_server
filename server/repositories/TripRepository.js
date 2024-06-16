@@ -60,12 +60,12 @@ async getCurrentTrip(userId) {
   try {
     const searchQuery = `
       SELECT 
-        t.id, t.user_id, u.username, 
-        t.title, t.description, t.url, 
-        t.created_at, t.status, p.avatar, p.about
+      t.id, t.user_id, u.username, 
+      t.title, t.description, t.url, 
+      t.created_at, t.status, p.avatar, p.about
       FROM trips AS t 
       JOIN usernames AS u ON t.user_id = u.user_id 
-      JOIN profiles AS p ON t.user_id = p.user_id
+      LEFT JOIN profiles AS p ON t.user_id = p.user_id
       WHERE t.user_id = $1 
       ORDER BY t.created_at DESC 
       LIMIT 1
@@ -75,9 +75,11 @@ async getCurrentTrip(userId) {
       const { id, title, username, description, url, created_at: createdAt, status, avatar, about } = searchResult.rows[0];
       return { id, username, title, description, url, createdAt, status, avatar, about };
     }
+    return null; 
   } catch (err) {
     console.error(err);
     throw err;
+    
   } finally {
     client.release();
   }
