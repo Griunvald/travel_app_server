@@ -22,7 +22,7 @@ class ProfileController {
 
 
   async getProfile(req, res, next) {
-    const { userId } = JSON.parse(req.cookies.user_info);
+    const userId = req.params.id;
     try {
       const profile = await this.profileRepository.getProfile(userId);
       res.status(200).json(profile);
