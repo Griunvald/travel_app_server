@@ -7,7 +7,7 @@ const router = Router();
 const profileController = new ProfileController(ProfileRepository);
 router
   .patch('/profile', profileController.updateProfile.bind(profileController))
-  .get('/profile/:id', profileController.getProfile.bind(profileController))
+  .get('/profile', profileController.getProfile.bind(profileController))
 
 export default router;
 
