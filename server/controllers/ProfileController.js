@@ -32,6 +32,17 @@ class ProfileController {
     }
   }
 
+  async getProfileById(req, res, next) {
+    const userId  = req.params.id
+    try {
+      const profile = await this.profileRepository.getProfile(userId);
+      res.status(200).json(profile);
+    } catch (err) {
+      console.error(err);
+      next(new AppError('Internal server error', 500));
+    }
+  }
+
 
 }
 
