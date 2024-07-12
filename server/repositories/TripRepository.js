@@ -191,6 +191,71 @@ async getCurrentTrip(userId) {
     }
   }
 
+ async getFullTripByUserIdAndTripId(userId, tripId) {
+    const client = await this.pool.connect();
+    try {
+      const searchQuery = `
+        SELECT 
+        t.id, t.user_id, u.username, 
+        t.title, t.description, t.url, 
+        t.created_at, t.status, p.avatar, p.about
+        FROM trips AS t 
+        JOIN usernames AS u ON t.user_id = u.user_id 
+        LEFT JOIN profiles AS p ON t.user_id = p.user_id
+        WHERE t.user_id = $1 AND t.id = $2
+      `;
+      const searchResult = await client.query(searchQuery, [userId, tripId]);
+      if (searchResult.rows.length > 0) {
+        const { id, username, title, description, url, created_at: createdAt, status, avatar, about } = searchResult.rows[0];
+        return { id, username, title, description, url, createdAt, status, avatar, about };
+      }
+      return null; 
+    } catch (err) {
+      console.error(err);
+      throw err;
+    } finally {
+      client.release();
+    }
+  }
+
+  async getTripRecordsWithTags(userId, tripId) {
+    const client = await this.pool.connect();
+    try {
+      const selectQuery = `
+        WITH RecordTags AS (
+          SELECT rt.record_id, t.id AS tag_id, t.tag_name
+          FROM record_tags rt
+          JOIN tags t ON rt.tag_id = t.id
+        )
+
+        SELECT
+          r.*,
+          tr.text_value,
+          ur.url_value,
+          p.avatar,
+          (
+            SELECT JSON_AGG(json_build_object('id', rt.tag_id, 'tag_name', rt.tag_name))
+            FROM RecordTags rt
+            WHERE rt.record_id = r.id
+          ) AS record_tags
+        FROM records r
+        LEFT JOIN text_records tr ON r.id = tr.id AND r.type = 'text'
+        LEFT JOIN url_records ur ON r.id = ur.id AND r.type = 'url'
+        LEFT JOIN profiles p ON r.user_id = p.user_id
+        WHERE r.user_id = $1 AND r.trip_id = $2
+        AND (tr.text_value IS NOT NULL OR ur.url_value IS NOT NULL)
+        ORDER BY r.order_number ASC;
+      `;
+      const result = await client.query(selectQuery, [userId, tripId]);
+      return toCamelCaseDeep(result);
+    } catch (err) {
+      console.error(err);
+      throw err;
+    } finally {
+      client.release();
+    }
+  }
+
 }
 
 export default new TripRepository(dbPool);

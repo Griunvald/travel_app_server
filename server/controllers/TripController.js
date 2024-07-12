@@ -26,6 +26,8 @@ class TripController {
       }
     }
   }
+
+
   async endCurrentTrip(req, res, next) {
     const { userId } = JSON.parse(req.cookies.user_info);
     try {
@@ -56,7 +58,6 @@ class TripController {
       console.error(err);
       next(new AppError('Internal server error', 500));
     }
-
   }
 
   async getTripsList(req, res, next) {
@@ -70,7 +71,6 @@ class TripController {
       next(new AppError('Internal server error', 500));
     }
   }
-
 
 
   async getCurrentTrip(req, res, next) {
@@ -109,16 +109,26 @@ class TripController {
 
   }
 
-  async getFullTrip(req, res, next) {
-    const userId = req.params.id;
+  async getFullCurrentTrip(req, res, next) {
+    const { userId } = req.params;
     try {
-      const fullTrip = await this.tripService.getFullTrip(userId);
+      const fullTrip = await this.tripService.getFullCurrentTrip(userId);
       res.status(200).json(fullTrip);
     } catch (err) {
       console.error(err);
       next(new AppError('Internal server error', 500));
     }
+  }
 
+  async getFullTripByUserIdAndTripId(req, res, next) {
+    const { userId, tripId } = req.params;
+    try {
+      const fullTrip = await this.tripService.getFullTripByUserIdAndTripId(userId, tripId);
+      res.status(200).json(fullTrip);
+    } catch (err) {
+      console.error(err);
+      next(new AppError('Internal server error', 500));
+    }
   }
 
   async getTripsCount(req, res, next) {

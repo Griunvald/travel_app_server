@@ -5,7 +5,7 @@ class TripService {
     this.tripRepository = tripRepository;
   }
 
-  async getFullTrip(userId) {
+  async getFullCurrentTrip(userId) {
     try {
       const tripDetails = await this.tripRepository.getCurrentTrip(userId);
 
@@ -26,6 +26,26 @@ class TripService {
     }
   }
 
+  async getFullTripByUserIdAndTripId(userId, tripId) {
+    try {
+      const tripDetails = await this.tripRepository.getFullTripByUserIdAndTripId(userId, tripId);
+
+      if (!tripDetails) {
+        return null;
+      }
+
+      const recordsWithTags = await this.tripRepository.getTripRecordsWithTags(userId, tripId);
+
+      return {
+        tripDetails,
+        records: recordsWithTags
+      };
+
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
 }
 
 export default new TripService(TripRepository);
