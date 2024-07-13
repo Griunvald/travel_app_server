@@ -1,5 +1,5 @@
-import express from 'express';
 import 'dotenv/config';
+import express from 'express';
 import db from './db.js';
 import cookieParser from 'cookie-parser';
 import path from 'path';
@@ -30,6 +30,13 @@ app.use(cors({
   credentials: true
 }));
 
+// Log incoming requests for debugging
+app.use((req, res, next) => {
+  console.log(`Incoming request: ${req.method} ${req.url}`);
+  next();
+});
+
+// API routes
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/trips', tripRouter);
 app.use('/api/v1/records', recordRouter);
@@ -39,8 +46,16 @@ app.use('/api/v1/follows', followerRouter);
 app.use('/api/v1/comments', commentRouter);
 app.use('/api/v1/users', profileRouter);
 app.use('/api/v1/likes', likeRouter);
+
+// Error handler middleware
 app.use(errorHandler);
 
+// Handle invalid API routes
+app.use('/api/v1', (req, res, next) => {
+  res.status(404).json({ error: 'Not Found' });
+});
+
+// Static files serving
 const buildPath = path.join(__dirname, 'build');
 if (fs.existsSync(buildPath)) {
   console.log('Serving static files from the build directory.');
