@@ -46,6 +46,16 @@ class TripService {
       throw err;
     }
   }
+
+  async getCurrentTripRecordsWithTags(userId) {
+    try {
+      const recordsWithTags = await this.tripRepository.getCurrentTripRecordsWithTags(userId);
+      return recordsWithTags;
+    } catch (err) {
+      console.error('Error in getCurrentTripRecordsWithTags:', err);
+      throw err;
+    }
+  }
 }
 
 export default new TripService(TripRepository);

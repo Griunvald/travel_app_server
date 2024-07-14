@@ -97,16 +97,22 @@ class TripController {
     }
   }
 
-  async getCurrentTripRecordsWithTags(req, res, next) {
-    const userId = JSON.parse(req.query.userId);
-    try {
-      const currentTripRecordsData = await this.tripRepository.getCurrentTripRecordsWithTags(userId);
-      res.status(200).json(currentTripRecordsData.rows)
-    } catch (err) {
-      console.error(err);
-      next(new AppError('Internal server error', 500));
-    }
+    
 
+
+async getCurrentTripRecordsWithTags(req, res) {
+    try {
+      const userId = req.query.userId;
+      if (!userId) {
+        return res.status(400).json({ status: 'error', message: 'userId is required' });
+      }
+
+      const records = await this.tripService.getCurrentTripRecordsWithTags(userId);
+      res.json(records);
+    } catch (error) {
+      console.error('Error fetching current trip records with tags:', error);
+      res.status(500).json({ status: 'error', message: 'Internal server error' });
+    }
   }
 
   async getFullCurrentTrip(req, res, next) {

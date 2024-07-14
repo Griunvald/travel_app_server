@@ -90,7 +90,7 @@ class TripRepository {
             trips.description, trips.url, trips.created_at, profiles.avatar, profiles.about FROM trips
             JOIN usernames ON trips.user_id = usernames.user_id
             LEFT JOIN profiles ON trips.user_id = profiles.user_id 
-            ORDER BY created_at DESC LIMIT $1 OFFSET $2`;
+            ORDER BY trips.created_at DESC LIMIT $1 OFFSET $2`;
       const searchResult = await client.query(searchQuery, [limit, offset]);
       const results = [];
 
@@ -108,53 +108,52 @@ class TripRepository {
     }
   }
 
-  async getCurrentTripRecordsWithTags(userId) {
+async getCurrentTripRecordsWithTags(userId) {
     const client = await this.pool.connect();
     try {
       const { id: tripId } = (await this.getCurrentTrip(userId)) ?? {};
+      if (!tripId) {
+        throw new Error(`No current trip found for userId: ${userId}`);
+      }
       const selectQuery = `
-            WITH RecordTags AS (
-            SELECT rt.record_id, t.id AS tag_id, t.tag_name
-            FROM record_tags rt
-            JOIN tags t ON rt.tag_id = t.id
-          )
-
-          SELECT
-            r.id,
-            r.user_id AS "userId",
-            r.trip_id AS "tripId",
-            r.created_at AS "createdAt",
-            r.edited_at AS "editedAt",
-            r.type,
-            r.order_number AS "orderNumber",
-            tr.text_value AS "textValue",
-            ur.url_value AS "urlValue",
-            p.avatar,
-            (
-              SELECT JSON_AGG(json_build_object('id', rt.tag_id, 'tag_name', rt.tag_name))
-              FROM RecordTags rt
-              WHERE rt.record_id = r.id
-            ) AS record_tags
-          FROM records r
-          LEFT JOIN text_records tr ON r.id = tr.id AND r.type = 'text'
-          LEFT JOIN url_records ur ON r.id = ur.id AND r.type = 'url'
-          LEFT JOIN profiles p ON r.user_id = p.user_id
-          WHERE r.user_id = $1 AND r.trip_id = $2
-          AND (tr.text_value IS NOT NULL OR ur.url_value IS NOT NULL)
-          ORDER BY r.order_number ASC;
-          `;
-
+        WITH RecordTags AS (
+          SELECT rt.record_id, t.id AS tag_id, t.tag_name
+          FROM record_tags rt
+          JOIN tags t ON rt.tag_id = t.id
+        )
+        SELECT
+          r.id,
+          r.user_id AS "userId",
+          r.trip_id AS "tripId",
+          r.created_at AS "createdAt",
+          r.edited_at AS "editedAt",
+          r.type,
+          r.order_number AS "orderNumber",
+          tr.text_value AS "textValue",
+          ur.url_value AS "urlValue",
+          p.avatar,
+          (
+            SELECT JSON_AGG(json_build_object('id', rt.tag_id, 'tag_name', rt.tag_name))
+            FROM RecordTags rt
+            WHERE rt.record_id = r.id
+          ) AS record_tags
+        FROM records r
+        LEFT JOIN text_records tr ON r.id = tr.id AND r.type = 'text'
+        LEFT JOIN url_records ur ON r.id = ur.id AND r.type = 'url'
+        LEFT JOIN profiles p ON r.user_id = p.user_id
+        WHERE r.user_id = $1 AND r.trip_id = $2
+        AND (tr.text_value IS NOT NULL OR ur.url_value IS NOT NULL)
+        ORDER BY r.order_number ASC;
+      `;
       const result = await client.query(selectQuery, [userId, tripId]);
-
       return toCamelCaseDeep(result.rows);
     } catch (err) {
-      console.error(err);
+      console.error('Error in getCurrentTripRecordsWithTags:', err);
       throw err;
     } finally {
       client.release();
     }
   }
-
   async getFullTripByUserIdAndTripId(userId, tripId) {
     const client = await this.pool.connect();
     try {
